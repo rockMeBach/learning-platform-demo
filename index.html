@@ -69,11 +69,15 @@
 
       <div class="controls">
         <button class="ctrl-btn play-btn" id="playBtn" data-tooltip="Play">▶</button>
-        <button class="ctrl-btn" id="prevSlideBtn" data-tooltip="Previous segment">⏮</button>
-        <button class="ctrl-btn" id="nextSlideBtn" data-tooltip="Next segment">⏭</button>
+        <button class="ctrl-btn" id="skipBackBtn" data-tooltip="Back 10s">⏪</button>
+        <button class="ctrl-btn" id="skipFwdBtn" data-tooltip="Forward 10s">⏩</button>
+        <span class="time-display" id="timeDisplay">0:00 / 0:00</span>
         <div class="progress-track" id="progressTrack">
+          <div class="progress-buffered" id="progressBuffered"></div>
           <div class="progress-fill-bar" id="progressFillBar"></div>
           <div class="progress-markers" id="progressMarkers"></div>
+          <div class="progress-handle" id="progressHandle"></div>
+          <div class="progress-hover-time" id="progressHoverTime"></div>
         </div>
         <button class="ctrl-btn" id="restartBtn" data-tooltip="Restart lesson">↻</button>
         <button class="ctrl-btn" id="muteBtn" data-tooltip="Mute">🔊</button>

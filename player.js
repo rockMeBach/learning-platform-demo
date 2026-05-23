@@ -7,49 +7,59 @@ const $ = (id) => document.getElementById(id);
 
 /* =====================================================================
  *  PEXELS VIDEO FALLBACK CHAIN
- *  Tries local ./videos/{id}.mp4 first, then several Pexels CDN
- *  variants. Pexels often blocks hotlinking, so the local copy is the
- *  reliable path — use download_pexels_videos.py to populate it.
+ *  Order of attempts depends on environment:
+ *    - file:// or localhost dev → tries ./videos/{id}.mp4 first
+ *      (lets you work fully offline with downloaded MP4s)
+ *    - deployed site (https://) → tries Pexels CDN first
+ *      (Pexels honours the Referer header on real domains, no need to ship MP4s)
  * ===================================================================== */
-const VIDEO_VARIANTS = {
+const IS_LOCAL =
+  location.protocol === 'file:' ||
+  location.hostname === 'localhost' ||
+  location.hostname === '127.0.0.1';
+
+const PEXELS_CDN_VARIANTS = {
   "7579577": [
-    "./videos/7579577.mp4",
     "https://videos.pexels.com/video-files/7579577/7579577-uhd_2732_1440_25fps.mp4",
     "https://videos.pexels.com/video-files/7579577/7579577-hd_1920_1080_30fps.mp4",
     "https://videos.pexels.com/video-files/7579577/7579577-hd_1920_1080_25fps.mp4",
     "https://videos.pexels.com/video-files/7579577/7579577-sd_960_506_30fps.mp4"
   ],
   "7578613": [
-    "./videos/7578613.mp4",
     "https://videos.pexels.com/video-files/7578613/7578613-uhd_2732_1440_30fps.mp4",
     "https://videos.pexels.com/video-files/7578613/7578613-hd_1920_1080_30fps.mp4",
     "https://videos.pexels.com/video-files/7578613/7578613-sd_960_506_30fps.mp4"
   ],
   "7579561": [
-    "./videos/7579561.mp4",
     "https://videos.pexels.com/video-files/7579561/7579561-hd_1080_1920_30fps.mp4",
     "https://videos.pexels.com/video-files/7579561/7579561-hd_1920_1080_30fps.mp4",
     "https://videos.pexels.com/video-files/7579561/7579561-sd_540_960_30fps.mp4"
   ],
   "14003933": [
-    "./videos/14003933.mp4",
     "https://videos.pexels.com/video-files/14003933/14003933-uhd_2732_1440_25fps.mp4",
     "https://videos.pexels.com/video-files/14003933/14003933-hd_1920_1080_25fps.mp4",
     "https://videos.pexels.com/video-files/14003933/14003933-sd_960_540_25fps.mp4"
   ],
   "30289541": [
-    "./videos/30289541.mp4",
     "https://videos.pexels.com/video-files/30289541/30289541-uhd_2732_1440_30fps.mp4",
     "https://videos.pexels.com/video-files/30289541/30289541-hd_1920_1080_30fps.mp4",
     "https://videos.pexels.com/video-files/30289541/30289541-sd_960_540_30fps.mp4"
   ],
   "34433115": [
-    "./videos/34433115.mp4",
     "https://videos.pexels.com/video-files/34433115/34433115-uhd_2732_1440_30fps.mp4",
     "https://videos.pexels.com/video-files/34433115/34433115-hd_1920_1080_30fps.mp4",
     "https://videos.pexels.com/video-files/34433115/34433115-sd_960_540_30fps.mp4"
   ]
 };
+
+const VIDEO_VARIANTS = {};
+Object.keys(PEXELS_CDN_VARIANTS).forEach(id => {
+  const local = `./videos/${id}.mp4`;
+  const cdn = PEXELS_CDN_VARIANTS[id];
+  // Local dev: local file first, then CDN as backup
+  // Deployed: CDN first, local as last-resort backup (in case you uploaded MP4s)
+  VIDEO_VARIANTS[id] = IS_LOCAL ? [local, ...cdn] : [...cdn, local];
+});
 
 /* =====================================================================
  *  STATE
@@ -58,6 +68,9 @@ let COURSE = null;
 const state = {
   currentLessonId: 1,
   currentSegmentIdx: 0,
+  // Word offset within the current segment where playback should start
+  // when next speakNarration() runs. Set by seeking.
+  startWordIdx: 0,
   playing: false,
   muted: false,
   rate: 1.0,
@@ -65,21 +78,87 @@ const state = {
   currentUtterance: null,
   currentVideoId: null,
   videoAttemptIdx: 0,
-  // When true, the next speechSynthesis.cancel() should NOT cause the
-  // current segment to advance via onend. Used by mute/speed/etc. that
-  // re-start the same segment with new settings.
-  suppressEndAdvance: false
+  suppressEndAdvance: false,
+  // Continuous timeline state
+  segmentStartedAt: 0,         // performance.now() when current segment narration began
+  segmentElapsedBeforePause: 0, // ms accumulated in this segment before last pause
+  rafId: null                  // requestAnimationFrame id for the progress tick
 };
 const RATES = [1.0, 1.25, 1.5, 0.75];
 let rateIdx = 0;
+
+/* =====================================================================
+ *  TIMELINE MODEL
+ *  We treat the whole lesson as a continuous timeline. Each segment has an
+ *  estimated duration in seconds; the cumulative starts form the timeline.
+ *  Interactions are zero-duration "stops" on the line.
+ * ===================================================================== */
+const WORDS_PER_MINUTE = 160;  // typical English TTS speaking rate
+
+function estimateSegmentDuration(seg, rate = 1) {
+  if (seg.type === 'interaction') return 0;
+  const wpm = WORDS_PER_MINUTE * rate;
+  const words = (seg.narration || '').split(/\s+/).filter(Boolean).length;
+  return Math.max(2, (words / wpm) * 60);   // seconds
+}
+
+function lessonTimeline() {
+  // Recomputed any time the rate changes, but rate change just stretches/squashes.
+  const segs = currentLesson().segments;
+  let acc = 0;
+  return segs.map((seg, i) => {
+    const dur = estimateSegmentDuration(seg, state.rate);
+    const entry = { idx: i, type: seg.type, duration: dur, start: acc, end: acc + dur };
+    acc += dur;
+    return entry;
+  });
+}
+
+function totalLessonDuration() {
+  return lessonTimeline().reduce((s, e) => s + e.duration, 0);
+}
+
+function timeToSegment(t) {
+  // Given an absolute time in seconds, find which segment it falls in,
+  // and the offset (in seconds) within that segment.
+  const tl = lessonTimeline();
+  for (const e of tl) {
+    if (t < e.end || e.idx === tl.length - 1) {
+      return { idx: e.idx, offsetSec: Math.max(0, t - e.start), entry: e };
+    }
+  }
+  const last = tl[tl.length - 1];
+  return { idx: last.idx, offsetSec: last.duration, entry: last };
+}
+
+function currentTimeSec() {
+  // Where are we in the absolute lesson timeline?
+  const tl = lessonTimeline();
+  const entry = tl[state.currentSegmentIdx];
+  if (!entry) return 0;
+  let elapsedInSeg = state.segmentElapsedBeforePause / 1000;
+  if (state.playing && state.segmentStartedAt) {
+    elapsedInSeg += (performance.now() - state.segmentStartedAt) / 1000;
+  }
+  elapsedInSeg = Math.min(elapsedInSeg, entry.duration);
+  return entry.start + elapsedInSeg;
+}
+
+function formatTime(s) {
+  s = Math.max(0, Math.round(s));
+  const m = Math.floor(s / 60);
+  const sec = (s % 60).toString().padStart(2, '0');
+  return `${m}:${sec}`;
+}
 
 /* =====================================================================
  *  DOM REFS (populated after DOMContentLoaded)
  * ===================================================================== */
 let stage, stageVideo, stageVideoTint, videoCredit;
 let slideArea, subtitles;
-let playBtn, prevBtn, nextBtn, restartBtn, muteBtn, speedBtn, fullscreenBtn;
-let progressFillBar, progressMarkers, progressTrack;
+let playBtn, skipBackBtn, skipFwdBtn, restartBtn, muteBtn, speedBtn, fullscreenBtn;
+let progressFillBar, progressBuffered, progressMarkers, progressHandle, progressHoverTime, progressTrack;
+let timeDisplay;
 let interactionOverlay, lessonList, completeOverlay;
 let lessonTitleEl, lessonSubtitleEl, courseProgressEl;
 let player;
@@ -92,15 +171,19 @@ function bindDom() {
   slideArea       = $('slideArea');
   subtitles       = $('subtitles');
   playBtn         = $('playBtn');
-  prevBtn         = $('prevSlideBtn');
-  nextBtn         = $('nextSlideBtn');
+  skipBackBtn     = $('skipBackBtn');
+  skipFwdBtn      = $('skipFwdBtn');
   restartBtn      = $('restartBtn');
   muteBtn         = $('muteBtn');
   speedBtn        = $('speedBtn');
   fullscreenBtn   = $('fullscreenBtn');
   progressFillBar = $('progressFillBar');
+  progressBuffered = $('progressBuffered');
   progressMarkers = $('progressMarkers');
+  progressHandle  = $('progressHandle');
+  progressHoverTime = $('progressHoverTime');
   progressTrack   = $('progressTrack');
+  timeDisplay     = $('timeDisplay');
   interactionOverlay = $('interactionOverlay');
   lessonList      = $('lessonList');
   completeOverlay = $('completeOverlay');
@@ -221,17 +304,40 @@ function renderSubtitles(text) {
 
 /* =====================================================================
  *  TEXT-TO-SPEECH
+ *  Accepts an optional startWordIdx so we can resume after a scrub.
  * ===================================================================== */
 function speakNarration(text, onEnd) {
+  const startIdx = state.startWordIdx || 0;
+  state.startWordIdx = 0;  // consume
+
+  // Slice the text to start at the requested word
+  const allWords = text.split(/\s+/);
+  const startCharIdx = startIdx > 0
+    ? allWords.slice(0, startIdx).join(' ').length + 1
+    : 0;
+  const textToSpeak = startIdx > 0 ? text.slice(startCharIdx) : text;
+
+  // Pre-mark all already-spoken words as revealed/spoken so the subtitle
+  // shows "where we resumed from" rather than empty.
+  const wordSpans = subtitles.querySelectorAll('.word');
+  for (let i = 0; i < startIdx && i < wordSpans.length; i++) {
+    wordSpans[i].classList.add('revealed', 'spoken');
+  }
+
   if (!('speechSynthesis' in window)) {
-    const estMs = Math.max(2500, text.length * 55);
+    const estMs = Math.max(2500, textToSpeak.length * 55);
     state.currentUtterance = null;
-    setTimeout(onEnd, estMs);
+    state.segmentStartedAt = performance.now();
+    setTimeout(() => {
+      state.segmentElapsedBeforePause = 0;
+      state.segmentStartedAt = 0;
+      onEnd();
+    }, estMs);
     return;
   }
   speechSynthesis.cancel();
 
-  const utter = new SpeechSynthesisUtterance(text);
+  const utter = new SpeechSynthesisUtterance(textToSpeak);
   utter.rate = state.rate;
   utter.pitch = 1.0;
   utter.volume = state.muted ? 0 : 1;
@@ -246,9 +352,8 @@ function speakNarration(text, onEnd) {
     if (preferred) utter.voice = preferred;
   }
 
-  const wordSpans = subtitles.querySelectorAll('.word');
   const wordCount = wordSpans.length;
-  let lastIdx = -1;
+  let lastIdx = startIdx - 1;
   let fallbackTimer = null;
   let boundaryFired = false;
 
@@ -267,17 +372,19 @@ function speakNarration(text, onEnd) {
     if (e.name && e.name !== 'word') return;
     boundaryFired = true;
     if (fallbackTimer) { clearInterval(fallbackTimer); fallbackTimer = null; }
-    const upto = text.slice(0, e.charIndex + 1);
-    const wordsStarted = upto.trim().length ? upto.trim().split(/\s+/).length : 1;
-    revealWord(wordsStarted - 1);
+    const upto = textToSpeak.slice(0, e.charIndex + 1);
+    const wordsStartedInSlice = upto.trim().length ? upto.trim().split(/\s+/).length : 1;
+    revealWord(startIdx + wordsStartedInSlice - 1);
   };
   utter.onstart = () => {
     subtitles.classList.remove('hidden');
     stage.classList.add('has-subtitles');
+    state.segmentStartedAt = performance.now();
+    startProgressTick();
     setTimeout(() => {
       if (boundaryFired) return;
       const msPerWord = 375 / state.rate;
-      let idx = 0;
+      let idx = startIdx;
       revealWord(idx);
       fallbackTimer = setInterval(() => {
         idx++;
@@ -292,12 +399,12 @@ function speakNarration(text, onEnd) {
     subtitles.classList.add('hidden');
     stage.classList.remove('has-subtitles');
     state.currentUtterance = null;
-    // If we were intentionally cancelled (e.g. mute toggled), the caller
-    // will handle what comes next — don't auto-advance the segment.
     if (state.suppressEndAdvance) {
       state.suppressEndAdvance = false;
       return;
     }
+    state.segmentElapsedBeforePause = 0;
+    state.segmentStartedAt = 0;
     if (state.playing) onEnd();
   };
   utter.onerror = () => {
@@ -317,6 +424,24 @@ function speakNarration(text, onEnd) {
 }
 
 /* =====================================================================
+ *  PROGRESS TICK — drives the playhead at 60fps while playing
+ * ===================================================================== */
+function startProgressTick() {
+  cancelAnimationFrame(state.rafId);
+  const tick = () => {
+    updateTimelineUI();
+    if (state.playing && state.segmentStartedAt) {
+      state.rafId = requestAnimationFrame(tick);
+    }
+  };
+  state.rafId = requestAnimationFrame(tick);
+}
+function stopProgressTick() {
+  cancelAnimationFrame(state.rafId);
+  state.rafId = null;
+}
+
+/* =====================================================================
  *  SEGMENT PLAYBACK
  * ===================================================================== */
 function playSegment() {
@@ -332,8 +457,12 @@ function playSegment() {
     renderSubtitles(seg.narration);
     if (state.playing) {
       speakNarration(seg.narration, () => {
+        // Segment naturally ended → advance to next, reset timing
         state.completedSegments.add(`${state.currentLessonId}:${state.currentSegmentIdx}`);
         state.currentSegmentIdx++;
+        state.startWordIdx = 0;
+        state.segmentElapsedBeforePause = 0;
+        state.segmentStartedAt = 0;
         playSegment();
       });
     }
@@ -437,8 +566,14 @@ function attachControls() {
   /* PLAY / PAUSE */
   playBtn.onclick = () => {
     if (state.playing) {
+      // Pausing — save accumulated elapsed so we can resume
+      if (state.segmentStartedAt) {
+        state.segmentElapsedBeforePause += performance.now() - state.segmentStartedAt;
+        state.segmentStartedAt = 0;
+      }
       state.playing = false;
       setPlayButtonIcon();
+      stopProgressTick();
       subtitles.classList.add('hidden');
       stage.classList.remove('has-subtitles');
       if ('speechSynthesis' in window) speechSynthesis.pause();
@@ -449,6 +584,8 @@ function attachControls() {
       if ('speechSynthesis' in window && speechSynthesis.paused && state.currentUtterance) {
         subtitles.classList.remove('hidden');
         stage.classList.add('has-subtitles');
+        state.segmentStartedAt = performance.now();
+        startProgressTick();
         speechSynthesis.resume();
       } else {
         playSegment();
@@ -456,57 +593,48 @@ function attachControls() {
     }
   };
 
-  /* PREV SEGMENT */
-  prevBtn.onclick = () => {
-    cancelNarration();
-    state.currentSegmentIdx = Math.max(0, state.currentSegmentIdx - 1);
-    if (state.playing) playSegment();
-    else renderStaticSegment();
-  };
+  /* SKIP -10s */
+  skipBackBtn.onclick = () => skipBy(-10);
+  /* SKIP +10s */
+  skipFwdBtn.onclick = () => skipBy(10);
 
-  /* NEXT SEGMENT */
-  nextBtn.onclick = () => {
-    cancelNarration();
-    const seg = currentSegment();
-    if (seg && seg.type === 'interaction') return; // must answer
-    state.completedSegments.add(`${state.currentLessonId}:${state.currentSegmentIdx}`);
-    state.currentSegmentIdx++;
-    if (state.playing) playSegment();
-    else renderStaticSegment();
-  };
-
-  /* RESTART LESSON — fully reset */
+  /* RESTART LESSON */
   restartBtn.onclick = () => {
     cancelNarration();
     state.currentSegmentIdx = 0;
+    state.startWordIdx = 0;
+    state.segmentElapsedBeforePause = 0;
+    state.segmentStartedAt = 0;
     state.playing = false;
     setPlayButtonIcon();
     completeOverlay.classList.remove('show');
     renderStaticSegment();
-    // Visual ping so user knows it worked
     restartBtn.classList.add('active-state');
     setTimeout(() => restartBtn.classList.remove('active-state'), 250);
   };
 
-  /* MUTE — instant, no segment skipping */
+  /* MUTE */
   muteBtn.onclick = () => {
     state.muted = !state.muted;
     muteBtn.textContent = state.muted ? '🔇' : '🔊';
     muteBtn.setAttribute('data-tooltip', state.muted ? 'Unmute' : 'Mute');
     muteBtn.classList.toggle('active-state', state.muted);
-    // Update live where supported. If we're currently speaking, restart
-    // the SAME segment with the new volume — but suppress the auto-advance
-    // that would otherwise happen when cancel() fires onend.
     const speaking = state.playing && state.currentUtterance && 'speechSynthesis' in window;
     if (state.currentUtterance) state.currentUtterance.volume = state.muted ? 0 : 1;
     if (speaking) {
+      // Preserve position when restarting under new volume
+      const tNow = currentTimeSec();
       cancelNarration();
-      // Re-play the SAME segment, not the next one.
-      playSegment();
+      seekTo(tNow);
+      if (!state.playing) {
+        state.playing = true;
+        setPlayButtonIcon();
+        playSegment();
+      }
     }
   };
 
-  /* SPEED — cycles 1× → 1.25× → 1.5× → 0.75× → 1×, no segment skipping */
+  /* SPEED */
   speedBtn.onclick = () => {
     rateIdx = (rateIdx + 1) % RATES.length;
     state.rate = RATES[rateIdx];
@@ -515,12 +643,19 @@ function attachControls() {
     speedBtn.classList.toggle('active-state', state.rate !== 1.0);
     const speaking = state.playing && state.currentUtterance && 'speechSynthesis' in window;
     if (speaking) {
+      // Preserve position when restarting under new rate
+      const tNow = currentTimeSec();
       cancelNarration();
-      playSegment();
+      seekTo(tNow);
+      if (!state.playing) {
+        state.playing = true;
+        setPlayButtonIcon();
+        playSegment();
+      }
     }
   };
 
-  /* FULLSCREEN — toggles on the whole player (not just stage) */
+  /* FULLSCREEN */
   fullscreenBtn.onclick = () => {
     const target = player;
     const isFull = document.fullscreenElement || document.webkitFullscreenElement;
@@ -541,50 +676,164 @@ function attachControls() {
   $('iContinue').onclick = () => {
     state.completedSegments.add(`${state.currentLessonId}:${state.currentSegmentIdx}`);
     state.currentSegmentIdx++;
+    state.startWordIdx = 0;
+    state.segmentElapsedBeforePause = 0;
+    state.segmentStartedAt = 0;
     interactionOverlay.classList.remove('show');
     state.playing = true;
     setPlayButtonIcon();
     playSegment();
   };
 
-  /* PROGRESS BAR — click to jump */
-  progressTrack.onclick = (e) => {
-    const segs = currentLesson().segments;
-    if (!segs.length) return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    const pct = (e.clientX - rect.left) / rect.width;
-    const idx = Math.min(segs.length - 1, Math.max(0, Math.floor(pct * segs.length)));
-    cancelNarration();
-    state.currentSegmentIdx = idx;
-    if (state.playing) playSegment();
-    else renderStaticSegment();
+  /* PROGRESS BAR — hover preview, click, drag */
+  let isDragging = false;
+  let wasPlayingBeforeDrag = false;
+
+  const pctFromEvent = (e) => {
+    const rect = progressTrack.getBoundingClientRect();
+    const x = (e.clientX !== undefined ? e.clientX : e.touches?.[0]?.clientX) - rect.left;
+    return Math.max(0, Math.min(1, x / rect.width));
   };
+
+  progressTrack.addEventListener('mousemove', (e) => {
+    const total = totalLessonDuration();
+    const pct = pctFromEvent(e);
+    progressHoverTime.style.left = (pct * 100) + '%';
+    progressHoverTime.textContent = formatTime(pct * total);
+    progressHoverTime.classList.add('show');
+  });
+  progressTrack.addEventListener('mouseleave', () => {
+    if (!isDragging) progressHoverTime.classList.remove('show');
+  });
+
+  progressTrack.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    wasPlayingBeforeDrag = state.playing;
+    progressTrack.classList.add('dragging');
+    if (state.playing) {
+      // Pause during drag
+      state.playing = false;
+      setPlayButtonIcon();
+      if ('speechSynthesis' in window) {
+        state.suppressEndAdvance = true;
+        speechSynthesis.cancel();
+      }
+      stopProgressTick();
+    }
+    const pct = pctFromEvent(e);
+    seekTo(pct * totalLessonDuration());
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    const pct = pctFromEvent(e);
+    const total = totalLessonDuration();
+    progressHoverTime.style.left = (pct * 100) + '%';
+    progressHoverTime.textContent = formatTime(pct * total);
+    // Live update fill while dragging for instant feedback
+    progressFillBar.style.width = (pct * 100) + '%';
+    progressHandle.style.left = (pct * 100) + '%';
+    timeDisplay.textContent = `${formatTime(pct * total)} / ${formatTime(total)}`;
+  });
+  document.addEventListener('mouseup', (e) => {
+    if (!isDragging) return;
+    isDragging = false;
+    progressTrack.classList.remove('dragging');
+    progressHoverTime.classList.remove('show');
+    const pct = pctFromEvent(e);
+    seekTo(pct * totalLessonDuration());
+    if (wasPlayingBeforeDrag) {
+      state.playing = true;
+      setPlayButtonIcon();
+      playSegment();
+    }
+  });
 }
 
 /* =====================================================================
- *  PROGRESS / SIDEBAR
+ *  TIMELINE UI
  * ===================================================================== */
-function updateProgress() {
-  const segs = currentLesson().segments;
-  const total = segs.length;
-  const done = state.currentSegmentIdx;
-  const pct = total ? (done / total) * 100 : 0;
+function updateTimelineUI() {
+  const total = totalLessonDuration();
+  const cur = currentTimeSec();
+  const pct = total > 0 ? (cur / total) * 100 : 0;
+
   progressFillBar.style.width = pct + '%';
+  progressHandle.style.left = pct + '%';
+  timeDisplay.textContent = `${formatTime(cur)} / ${formatTime(total)}`;
 
-  progressMarkers.innerHTML = '';
-  segs.forEach((s, i) => {
-    const m = document.createElement('div');
-    m.className = 'progress-marker' + (s.type === 'interaction' ? ' interaction' : '');
-    if (i < state.currentSegmentIdx) m.classList.add('passed');
-    m.style.left = ((i + 0.5) / total) * 100 + '%';
-    progressMarkers.appendChild(m);
-  });
+  // Buffered = furthest segment we've played to (visual hint of progress)
+  const buffered = Math.max(cur, (lessonTimeline()[state.currentSegmentIdx] || {}).end || 0);
+  const bufPct = total > 0 ? Math.min(100, (buffered / total) * 100) : 0;
+  progressBuffered.style.width = bufPct + '%';
 
+  // Markers — one per interaction stop
+  if (progressMarkers.childElementCount === 0 || progressMarkers.dataset.lessonId !== String(state.currentLessonId)) {
+    progressMarkers.innerHTML = '';
+    progressMarkers.dataset.lessonId = String(state.currentLessonId);
+    const tl = lessonTimeline();
+    tl.forEach(entry => {
+      if (entry.type !== 'interaction') return;
+      const m = document.createElement('div');
+      m.className = 'progress-marker interaction';
+      m.style.left = (entry.start / total) * 100 + '%';
+      m.title = 'Interaction checkpoint';
+      progressMarkers.appendChild(m);
+    });
+  }
+
+  // Lesson completion (used by sidebar)
   const lesson = currentLesson();
-  lesson.complete = total ? done / total : 0;
-
-  const courseAvg = COURSE.lessons.reduce((sum, l) => sum + (l.complete || 0), 0) / COURSE.lessons.length;
+  lesson.complete = total > 0 ? Math.min(1, cur / total) : 0;
+  const courseAvg = COURSE.lessons.reduce((s, l) => s + (l.complete || 0), 0) / COURSE.lessons.length;
   courseProgressEl.textContent = Math.round(courseAvg * 100) + '%';
+}
+
+// Backwards-compat alias used elsewhere
+function updateProgress() { updateTimelineUI(); }
+
+/* =====================================================================
+ *  SEEK — the heart of the "real video" feel
+ *  Given an absolute lesson-time in seconds, jump to the right segment and
+ *  resume narration at the right word offset.
+ * ===================================================================== */
+function seekTo(targetSec) {
+  const total = totalLessonDuration();
+  targetSec = Math.max(0, Math.min(total, targetSec));
+  const { idx, offsetSec, entry } = timeToSegment(targetSec);
+  const segs = currentLesson().segments;
+  const seg = segs[idx];
+
+  // If we're seeking into an interaction segment, jump TO it but don't auto-advance
+  if (seg.type === 'interaction') {
+    cancelNarration();
+    state.currentSegmentIdx = idx;
+    state.segmentElapsedBeforePause = 0;
+    state.segmentStartedAt = 0;
+    state.startWordIdx = 0;
+    renderStaticSegment(); // shows the interaction
+    return;
+  }
+
+  // For slide segments: figure out which word the offsetSec lands on
+  const words = (seg.narration || '').split(/\s+/).filter(Boolean);
+  const wordIdx = entry.duration > 0
+    ? Math.min(words.length - 1, Math.floor((offsetSec / entry.duration) * words.length))
+    : 0;
+
+  cancelNarration();
+  state.currentSegmentIdx = idx;
+  state.startWordIdx = wordIdx;
+  state.segmentElapsedBeforePause = offsetSec * 1000;
+  state.segmentStartedAt = 0;
+
+  if (state.playing) playSegment();
+  else renderStaticSegment();
+  updateTimelineUI();
+}
+
+function skipBy(deltaSec) {
+  seekTo(currentTimeSec() + deltaSec);
 }
 
 function updateLessonList() {
@@ -615,12 +864,18 @@ function switchLesson(id) {
   clearStageVideo();
   state.currentLessonId = id;
   state.currentSegmentIdx = 0;
+  state.startWordIdx = 0;
+  state.segmentElapsedBeforePause = 0;
+  state.segmentStartedAt = 0;
   state.playing = false;
   setPlayButtonIcon();
   completeOverlay.classList.remove('show');
   const lesson = currentLesson();
   lessonTitleEl.textContent = `${lesson.id}. ${lesson.title}`;
   lessonSubtitleEl.textContent = `Module ${lesson.id}: ${lesson.title}`;
+  // Force re-render of timeline markers for the new lesson
+  progressMarkers.innerHTML = '';
+  progressMarkers.dataset.lessonId = '';
   if (lesson.segments.length === 0) {
     slideArea.innerHTML = `<div class="slide active">
       <div class="slide-eyebrow">Coming soon</div>
@@ -641,11 +896,14 @@ function goToLesson(delta) {
   const next = COURSE.lessons[idx + delta];
   if (next) switchLesson(next.id);
 }
-window.goToLesson = goToLesson; // exposed for onclick attribute
+window.goToLesson = goToLesson;
 
 function restartLesson() {
   cancelNarration();
   state.currentSegmentIdx = 0;
+  state.startWordIdx = 0;
+  state.segmentElapsedBeforePause = 0;
+  state.segmentStartedAt = 0;
   state.playing = false;
   setPlayButtonIcon();
   completeOverlay.classList.remove('show');
@@ -692,9 +950,9 @@ async function init() {
     $('ttsWarn').classList.add('show');
   }
 
-  // Start on lesson 1 to show the most-developed module first
-  state.currentLessonId = 1;
-  switchLesson(1);
+  // Start on lesson 2 to show the most-developed module first
+  state.currentLessonId = 2;
+  switchLesson(2);
 
   $('ttsWarn').classList.add('show');
   setTimeout(() => $('ttsWarn').classList.remove('show'), 6000);
@@ -703,8 +961,10 @@ async function init() {
   document.addEventListener('keydown', e => {
     if (e.target.matches('textarea, input, select')) return;
     if (e.code === 'Space') { e.preventDefault(); playBtn.click(); }
-    if (e.key === 'ArrowRight') nextBtn.click();
-    if (e.key === 'ArrowLeft') prevBtn.click();
+    if (e.key === 'ArrowRight') { e.preventDefault(); skipFwdBtn.click(); }
+    if (e.key === 'ArrowLeft')  { e.preventDefault(); skipBackBtn.click(); }
+    if (e.key === 'j' || e.key === 'J') skipBackBtn.click();
+    if (e.key === 'l' || e.key === 'L') skipFwdBtn.click();
     if (e.key === 'm' || e.key === 'M') muteBtn.click();
     if (e.key === 'f' || e.key === 'F') fullscreenBtn.click();
   });
