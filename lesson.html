@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stock Market Essentials — Narrated Module</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="brand">
+    <div class="brand-mark"><span>SA</span></div>
+    <div class="brand-text">
+      <div class="name">Skilling Academy</div>
+      <div class="sub">Stock Market Essentials</div>
+    </div>
+  </div>
+  <div class="header-progress">Course Progress: <b id="courseProgress">0%</b></div>
+</header>
+
+<main class="lesson-page">
+  <div>
+    <h1 class="lesson-title" id="lessonTitle">Loading…</h1>
+    <div class="lesson-subtitle" id="lessonSubtitle">Loading…</div>
+
+    <div class="player" id="player">
+      <div class="stage" id="stage">
+        <video class="stage-video" id="stageVideo" muted loop playsinline preload="auto"></video>
+        <div class="stage-video-tint" id="stageVideoTint"></div>
+        <div class="video-credit" id="videoCredit"></div>
+
+        <div class="stage-watermark-left">
+          <div class="leaf"></div>
+          <span>Skilling<br><small style="font-weight:400;color:var(--rf-green);">Academy</small></span>
+        </div>
+        <div class="stage-watermark-right">
+          <div class="nsdc"></div>
+          <span>NSDC</span>
+        </div>
+
+        <div class="slide-bg-decoration deco-1"></div>
+        <div class="slide-bg-decoration deco-2"></div>
+
+        <div class="tts-warn" id="ttsWarn">🔊 Click play — your browser needs a click to enable narration</div>
+
+        <div class="slide-area" id="slideArea"></div>
+
+        <div class="subtitles hidden" id="subtitles"></div>
+
+        <div class="interaction-overlay" id="interactionOverlay">
+          <span class="interaction-label" id="iLabel">◆ Quick Check</span>
+          <div class="interaction-q" id="iQuestion"></div>
+          <div class="interaction-options" id="iOptions"></div>
+          <div class="ifb" id="iFeedback"></div>
+          <button class="continue-btn" id="iContinue">Continue Lesson →</button>
+        </div>
+
+        <div class="complete-overlay" id="completeOverlay">
+          <div class="icon">✓</div>
+          <h2>Lesson Complete!</h2>
+          <p>Great work. The next module is unlocked in the sidebar.</p>
+          <button class="replay-btn" onclick="restartLesson()">↻ Replay Lesson</button>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="ctrl-btn play-btn" id="playBtn" data-tooltip="Play">▶</button>
+        <button class="ctrl-btn" id="prevSlideBtn" data-tooltip="Previous segment">⏮</button>
+        <button class="ctrl-btn" id="nextSlideBtn" data-tooltip="Next segment">⏭</button>
+        <div class="progress-track" id="progressTrack">
+          <div class="progress-fill-bar" id="progressFillBar"></div>
+          <div class="progress-markers" id="progressMarkers"></div>
+        </div>
+        <button class="ctrl-btn" id="restartBtn" data-tooltip="Restart lesson">↻</button>
+        <button class="ctrl-btn" id="muteBtn" data-tooltip="Mute">🔊</button>
+        <button class="ctrl-btn speed-btn" id="speedBtn" data-tooltip="Playback speed">1×</button>
+        <button class="ctrl-btn" id="fullscreenBtn" data-tooltip="Fullscreen">⛶</button>
+      </div>
+    </div>
+
+    <div class="lesson-footer">
+      <button class="lesson-nav-btn" onclick="goToLesson(-1)">‹ Previous Lesson</button>
+      <button class="lesson-nav-btn" onclick="goToLesson(1)">Next Lesson ›</button>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <h3>Content</h3>
+    <ul class="lesson-list" id="lessonList"></ul>
+  </aside>
+</main>
+
+<script src="./player.js"></script>
+</body>
+</html>

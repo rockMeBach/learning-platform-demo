@@ -1,0 +1,526 @@
+{
+  "title": "Stock Market Essentials",
+  "subtitle": "A beginner-friendly course on how markets work",
+  "lessons": [
+    {
+      "id": 1,
+      "title": "Course Introduction",
+      "complete": 0,
+      "segments": [
+        {
+          "type": "slide",
+          "layout": "title",
+          "eyebrow": "Welcome",
+          "heading": "Stock Market <em>Essentials</em>",
+          "body": "Over the next five short modules, you'll go from never having looked at a stock chart to making confident, informed decisions about your own investments.",
+          "media": {
+            "videoId": "7579577",
+            "label": "Financial Market",
+            "credit": "Tima Miroshnichenko",
+            "url": "https://www.pexels.com/video/financial-market-7579577/"
+          },
+          "narration": "Welcome to Stock Market Essentials. Over the next five short modules, you will go from never having looked at a stock chart, to making confident and informed decisions about your own investments."
+        },
+        {
+          "type": "slide",
+          "layout": "bullets",
+          "eyebrow": "What this course covers",
+          "heading": "Five modules, fifteen minutes each",
+          "bullets": [
+            "Module 1: Course Introduction (you are here)",
+            "Module 2: Reading the Market",
+            "Module 3: Placing Orders",
+            "Module 4: Diversification & Risk",
+            "Module 5: Course Assessment"
+          ],
+          "narration": "The course is structured as five modules, each about fifteen minutes long. You are currently in module one, the introduction. Module two will teach you how to read the market. Module three covers placing orders. Module four explains diversification and risk. And module five is your final assessment."
+        },
+        {
+          "type": "slide",
+          "layout": "bullets",
+          "eyebrow": "How you'll learn",
+          "heading": "Three levels of interaction",
+          "bullets": [
+            "Level 1: Watch and recall basic concepts",
+            "Level 2: Apply ideas through quick exercises",
+            "Level 3: Make decisions in real-world scenarios"
+          ],
+          "narration": "You will learn through three levels of interaction. Level one is about watching and recalling basic concepts. Level two asks you to apply those ideas through quick exercises. And level three places you in real world scenarios, where every choice has a consequence."
+        },
+        {
+          "type": "interaction",
+          "kind": "truefalse",
+          "question": "This course assumes you already have experience trading stocks.",
+          "options": ["True", "False"],
+          "correctIndex": 1,
+          "feedback": "Right — this course is designed for absolute beginners. No prior experience needed."
+        },
+        {
+          "type": "slide",
+          "layout": "title",
+          "eyebrow": "Ready to begin?",
+          "heading": "Let's <em>get started</em>",
+          "body": "Click 'Next Lesson' below or pick Module 2 from the sidebar to begin your journey.",
+          "narration": "You are all set. Click Next Lesson below, or pick Module 2 from the sidebar, to begin your journey."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Reading the Market",
+      "complete": 0,
+      "segments": [
+        {
+          "type": "slide",
+          "layout": "title",
+          "eyebrow": "Module 2",
+          "heading": "Reading the <em>Market</em>",
+          "body": "Every blinking number, every red and green tick on a market screen carries information. In this lesson, you'll learn how to read those signals — even if you've never bought a single share.",
+          "media": {
+            "videoId": "7579577",
+            "label": "Financial Market",
+            "credit": "Tima Miroshnichenko",
+            "url": "https://www.pexels.com/video/financial-market-7579577/"
+          },
+          "narration": "Welcome to module two: Reading the Market. Every blinking number, every red and green tick on a market screen carries information. In this lesson, you will learn how to read those signals, even if you have never bought a single share."
+        },
+        {
+          "type": "slide",
+          "layout": "bullets",
+          "eyebrow": "By the end of this lesson",
+          "heading": "You'll be able to:",
+          "bullets": [
+            "Recognise bull and bear markets",
+            "Read a stock quote with bid and ask prices",
+            "Identify what makes prices move",
+            "Spot the difference between volatility and risk"
+          ],
+          "narration": "By the end of this lesson, you will be able to recognise bull and bear markets, read a stock quote with bid and ask prices, identify what makes prices move, and spot the important difference between volatility and risk."
+        },
+        {
+          "type": "slide",
+          "layout": "definition",
+          "eyebrow": "Key Concept",
+          "heading": "Bull market vs <em>bear market</em>",
+          "definition": {
+            "term": "Bull Market",
+            "meaning": "A market where prices are rising and investor confidence is high. Named after the way a bull strikes upward with its horns."
+          },
+          "body": "The opposite is a bear market — falling prices, cautious investors — named for how a bear swipes downward with its paw. The technical definition: a sustained move of twenty percent or more from a recent low or high.",
+          "media": {
+            "videoId": "7578613",
+            "label": "Market Movement Analysis",
+            "credit": "Tima Miroshnichenko",
+            "url": "https://www.pexels.com/video/stock-market-movement-analysis-7578613/"
+          },
+          "narration": "Let's start with the basic vocabulary. A bull market is one where prices are rising and investor confidence is high. It is named after the way a bull strikes upward with its horns. The opposite is a bear market: falling prices and cautious investors, named for how a bear swipes downward with its paw. The technical definition is a sustained move of twenty percent or more from a recent low, or recent high."
+        },
+        {
+          "type": "interaction",
+          "kind": "truefalse",
+          "question": "A bull market is defined as a sustained decline of 20% or more from recent highs.",
+          "options": ["True", "False"],
+          "correctIndex": 1,
+          "feedback": "That describes a bear market, not a bull. A bull market is the opposite — a sustained rise of 20% or more from recent lows."
+        },
+        {
+          "type": "slide",
+          "layout": "split",
+          "eyebrow": "How to read",
+          "heading": "A stock <em>quote</em>",
+          "body": "Every public company trades under a ticker symbol — Reliance, TCS, Infosys. A live quote shows the symbol, the last traded price, and the change since the previous close.",
+          "media": {
+            "videoId": "7579561",
+            "label": "Stock Exchange Display",
+            "credit": "Tima Miroshnichenko",
+            "url": "https://www.pexels.com/video/stock-market-exchanges-on-display-7579561/"
+          },
+          "narration": "Now let's look at how to read a stock quote. Every public company trades under a ticker symbol: Reliance, TCS, Infosys. A live quote shows the symbol, the last traded price, and the change since the previous close."
+        },
+        {
+          "type": "slide",
+          "layout": "stats",
+          "eyebrow": "The two numbers that matter",
+          "heading": "<em>Bid</em> and <em>ask</em>",
+          "stats": [
+            { "num": "₹2,847", "lbl": "Bid — highest buyer pays" },
+            { "num": "₹2,849", "lbl": "Ask — lowest seller takes" },
+            { "num": "₹2.00", "lbl": "Spread (gap)" }
+          ],
+          "body": "The bid is the highest price a buyer is willing to pay. The ask is the lowest price a seller will accept. The difference is the spread — and the smaller it is, the more liquid the stock.",
+          "media": {
+            "videoId": "34433115",
+            "label": "Live Market Data",
+            "credit": "Cis14_04 09",
+            "url": "https://www.pexels.com/video/stock-market-data-on-computer-screen-34433115/"
+          },
+          "narration": "Two numbers really matter: the bid and the ask. The bid is the highest price a buyer is willing to pay. The ask is the lowest price a seller will accept. The difference between them is called the spread, and the smaller it is, the more liquid the stock."
+        },
+        {
+          "type": "interaction",
+          "kind": "mcq",
+          "question": "On a stock quote, what does the bid price represent?",
+          "options": [
+            "The price a seller is asking for the share.",
+            "The highest price a buyer is currently willing to pay.",
+            "The average of today's high and low.",
+            "Yesterday's closing price."
+          ],
+          "correctIndex": 1,
+          "feedback": "Correct. The bid is the demand side — what buyers will pay right now. The ask is the supply side. Their gap is the spread."
+        },
+        {
+          "type": "slide",
+          "layout": "bullets",
+          "eyebrow": "What moves the price",
+          "heading": "Forces acting on a stock",
+          "bullets": [
+            "Company earnings — beats or misses estimates",
+            "Central bank interest-rate decisions",
+            "Large fund flows in or out",
+            "Broad investor sentiment and risk appetite",
+            "Sector-specific news and global events"
+          ],
+          "media": {
+            "videoId": "14003933",
+            "label": "Real-time Market Chart",
+            "credit": "Gilmer Diaz Estela",
+            "url": "https://www.pexels.com/video/stock-market-graph-14003933/"
+          },
+          "narration": "Stock prices respond to many forces at once. Company earnings, especially when they beat or miss estimates. Central bank interest-rate decisions. Large fund flows in or out. Broad investor sentiment and risk appetite. And sector-specific news or global events. By the time a single headline reaches you, the market may already have reacted."
+        },
+        {
+          "type": "slide",
+          "layout": "title",
+          "eyebrow": "That wraps up the lesson",
+          "heading": "You've completed <em>Module 2</em>",
+          "body": "You can now recognise bull and bear markets, read a quote with bid and ask, and identify the forces that move prices. In the next lesson, we'll cover order types — how to actually place a trade.",
+          "media": {
+            "videoId": "30289541",
+            "label": "Real-time Chart Analysis",
+            "credit": "Sourav Sharma",
+            "url": "https://www.pexels.com/video/real-time-stock-market-chart-analysis-footage-30289541/"
+          },
+          "narration": "That wraps up module two. You can now recognise bull and bear markets, read a quote with bid and ask, and identify the forces that move prices. In the next lesson, we will cover order types: how to actually place a trade. Well done."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Placing Orders",
+      "complete": 0,
+      "segments": [
+        {
+          "type": "slide",
+          "layout": "title",
+          "eyebrow": "Module 3",
+          "heading": "Placing <em>Orders</em>",
+          "body": "Knowing what to buy is only half the job. The other half is knowing how to buy it — picking the right order type for the situation.",
+          "media": {
+            "videoId": "30289541",
+            "label": "Real-time Chart Analysis",
+            "credit": "Sourav Sharma",
+            "url": "https://www.pexels.com/video/real-time-stock-market-chart-analysis-footage-30289541/"
+          },
+          "narration": "Welcome to module three: Placing Orders. Knowing what to buy is only half the job. The other half is knowing how to buy it, by picking the right order type for the situation at hand."
+        },
+        {
+          "type": "slide",
+          "layout": "definition",
+          "eyebrow": "Order Type #1",
+          "heading": "Market <em>order</em>",
+          "definition": {
+            "term": "Market Order",
+            "meaning": "Buys or sells immediately at the best available price. Prioritises speed over price."
+          },
+          "body": "Use a market order when you absolutely need to be in or out of a position right now. The risk: in a fast-moving stock, the price you actually get may differ from the price you saw a second ago.",
+          "narration": "The first order type is the market order. It buys or sells immediately at the best available price. Use a market order when you absolutely need to be in or out of a position right now. The risk: in a fast moving stock, the price you actually get may differ from the price you saw a second ago."
+        },
+        {
+          "type": "slide",
+          "layout": "definition",
+          "eyebrow": "Order Type #2",
+          "heading": "Limit <em>order</em>",
+          "definition": {
+            "term": "Limit Order",
+            "meaning": "Buys or sells only at your specified price or better. Prioritises price over speed."
+          },
+          "body": "If TCS is trading at ₹3,920 and you set a buy limit at ₹3,900, your order only fills if the price drops. The trade-off: it may never execute if the price doesn't reach your level.",
+          "narration": "The second is the limit order. It buys or sells only at your specified price, or better. If TCS is trading at three thousand nine hundred and twenty rupees, and you set a buy limit at three thousand nine hundred, your order only fills if the price drops. The trade-off: it may never execute if the price doesn't reach your level."
+        },
+        {
+          "type": "interaction",
+          "kind": "mcq",
+          "question": "Which order type guarantees execution but not price?",
+          "options": [
+            "Limit order",
+            "Stop-loss order",
+            "Market order",
+            "Trailing stop"
+          ],
+          "correctIndex": 2,
+          "feedback": "Correct. A market order trades speed for price certainty. The opposite is a limit order — it guarantees a price (or better) but doesn't guarantee a fill."
+        },
+        {
+          "type": "slide",
+          "layout": "definition",
+          "eyebrow": "Order Type #3",
+          "heading": "Stop-<em>loss</em> order",
+          "definition": {
+            "term": "Stop-Loss Order",
+            "meaning": "Automatically sells your position if the price drops to a level you set. Limits downside."
+          },
+          "body": "Holding TCS at ₹3,920? Set a stop-loss at ₹3,800. If price falls to that level, your shares sell automatically. This is the single most important risk-management tool for new investors.",
+          "narration": "The third order type is the stop loss. It automatically sells your position if the price drops to a level you set. This limits your downside. Say you are holding TCS at three thousand nine hundred and twenty, and you set a stop loss at three thousand eight hundred. If the price falls to that level, your shares sell automatically. This is the single most important risk management tool for new investors."
+        },
+        {
+          "type": "slide",
+          "layout": "definition",
+          "eyebrow": "Order Type #4",
+          "heading": "Trailing <em>stop</em>",
+          "definition": {
+            "term": "Trailing Stop",
+            "meaning": "A stop-loss that moves up with the price, locking in gains as the stock rises."
+          },
+          "body": "Set a 5% trailing stop on a stock you bought at ₹100. If it rises to ₹120, your stop moves to ₹114 — protecting most of your gain. If it then falls to ₹114, you exit profitably.",
+          "narration": "The fourth is the trailing stop. It is a stop loss that moves up with the price, locking in gains as the stock rises. Set a five percent trailing stop on a stock you bought at one hundred rupees. If it rises to one hundred and twenty, your stop moves up to one hundred and fourteen, protecting most of your gain. If it then falls to one hundred and fourteen, you exit profitably."
+        },
+        {
+          "type": "interaction",
+          "kind": "mcq",
+          "question": "You bought a stock at ₹500. It's now at ₹650 and you want to keep most of the gain even if it pulls back. Which order fits best?",
+          "options": [
+            "Market order to sell now",
+            "Limit order to sell at ₹700",
+            "Trailing stop at 5%",
+            "Stop-loss at ₹450"
+          ],
+          "correctIndex": 2,
+          "feedback": "Right — a trailing stop follows the price up. At a 5% trail, your exit price would be around ₹617, protecting most of the gain while still allowing more upside."
+        },
+        {
+          "type": "slide",
+          "layout": "title",
+          "eyebrow": "Module complete",
+          "heading": "You know the <em>four</em> essentials",
+          "body": "Market for speed, limit for price, stop-loss for safety, trailing stop for gains. The next lesson tackles the bigger question: how do you stop one bad trade from ruining your portfolio?",
+          "media": {
+            "videoId": "14003933",
+            "label": "Market Chart",
+            "credit": "Gilmer Diaz Estela",
+            "url": "https://www.pexels.com/video/stock-market-graph-14003933/"
+          },
+          "narration": "Excellent. You now know the four essential order types. Market for speed, limit for price, stop loss for safety, and trailing stop to lock in gains. The next lesson tackles a bigger question: how do you stop a single bad trade from ruining your portfolio?"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Diversification & Risk",
+      "complete": 0,
+      "segments": [
+        {
+          "type": "slide",
+          "layout": "title",
+          "eyebrow": "Module 4",
+          "heading": "Diversification & <em>Risk</em>",
+          "body": "Nobel laureate Harry Markowitz famously called diversification 'the only free lunch in finance.' This module explains why — and how to actually do it.",
+          "media": {
+            "videoId": "34433115",
+            "label": "Portfolio Data",
+            "credit": "Cis14_04 09",
+            "url": "https://www.pexels.com/video/stock-market-data-on-computer-screen-34433115/"
+          },
+          "narration": "Welcome to module four: Diversification and Risk. Nobel laureate Harry Markowitz famously called diversification the only free lunch in finance. This module explains why, and more importantly, how to actually do it."
+        },
+        {
+          "type": "slide",
+          "layout": "definition",
+          "eyebrow": "The core idea",
+          "heading": "Don't put all your eggs in <em>one basket</em>",
+          "definition": {
+            "term": "Diversification",
+            "meaning": "Spreading your money across assets that don't all move together, so a loss in one is offset by gains or stability in another."
+          },
+          "body": "If you own only one stock and that company has a bad quarter, your entire portfolio suffers. If you own twenty stocks across different sectors, a single bad earnings report barely moves the needle.",
+          "narration": "The core idea is simple: don't put all your eggs in one basket. Diversification means spreading your money across assets that don't all move together. So a loss in one is offset by gains or stability in another. If you own only one stock and that company has a bad quarter, your entire portfolio suffers. If you own twenty stocks across different sectors, a single bad earnings report barely moves the needle."
+        },
+        {
+          "type": "slide",
+          "layout": "stats",
+          "eyebrow": "How it works in practice",
+          "heading": "Spreading across <em>asset classes</em>",
+          "stats": [
+            { "num": "60%", "lbl": "Stocks (growth)" },
+            { "num": "30%", "lbl": "Bonds (stability)" },
+            { "num": "10%", "lbl": "Cash/Gold (defensive)" }
+          ],
+          "body": "A classic balanced allocation. When stocks fall, bonds and gold often hold up — keeping your portfolio steadier than any single asset alone.",
+          "narration": "Here is how it works in practice. A classic balanced allocation is sixty percent in stocks for growth, thirty percent in bonds for stability, and ten percent in cash or gold for defense. When stocks fall, bonds and gold often hold up, keeping your portfolio steadier than any single asset alone."
+        },
+        {
+          "type": "interaction",
+          "kind": "truefalse",
+          "question": "Diversification eliminates all risk from your portfolio.",
+          "options": ["True", "False"],
+          "correctIndex": 1,
+          "feedback": "Correct. Diversification reduces company-specific and sector-specific risk, but it cannot eliminate market-wide risk — when everything falls together, like in 2008 or March 2020, diversified portfolios still drop."
+        },
+        {
+          "type": "slide",
+          "layout": "definition",
+          "eyebrow": "Two types of risk",
+          "heading": "Volatility vs <em>permanent loss</em>",
+          "definition": {
+            "term": "Volatility",
+            "meaning": "Short-term price ups and downs. Uncomfortable, but reversible if you wait."
+          },
+          "body": "Permanent loss is different — selling at the bottom out of panic, or buying a company that genuinely fails. Diversification protects against permanent loss far more than against volatility.",
+          "narration": "Two types of risk are often confused. Volatility is short term price ups and downs. It is uncomfortable to watch, but reversible if you wait. Permanent loss is different. It happens when you sell at the bottom out of panic, or when you buy a company that genuinely fails. Diversification protects against permanent loss far more than against volatility."
+        },
+        {
+          "type": "slide",
+          "layout": "bullets",
+          "eyebrow": "Rules of thumb",
+          "heading": "Building a sensible portfolio",
+          "bullets": [
+            "Hold at least 15-20 stocks, across different sectors",
+            "No single position should be more than 5-10% of the portfolio",
+            "Mix asset classes: stocks, bonds, gold, cash",
+            "Rebalance once or twice a year — sell winners, buy losers",
+            "Match your stock allocation to your time horizon"
+          ],
+          "media": {
+            "videoId": "14003933",
+            "label": "Real-time Market Chart",
+            "credit": "Gilmer Diaz Estela",
+            "url": "https://www.pexels.com/video/stock-market-graph-14003933/"
+          },
+          "narration": "A few rules of thumb for building a sensible portfolio. Hold at least fifteen to twenty stocks, across different sectors. No single position should be more than five to ten percent of the portfolio. Mix asset classes, like stocks, bonds, gold, and cash. Rebalance once or twice a year, selling winners and buying losers. And match your stock allocation to your time horizon. The longer you can stay invested, the more stocks you can comfortably hold."
+        },
+        {
+          "type": "interaction",
+          "kind": "mcq",
+          "question": "Your friend has ₹10 lakhs invested entirely in one technology stock. What's the most important issue?",
+          "options": [
+            "Tech stocks are too volatile to own at all",
+            "The portfolio has no diversification — a single company's troubles could wipe out the entire investment",
+            "₹10 lakhs is too small to invest in stocks",
+            "They should sell immediately and put everything in cash"
+          ],
+          "correctIndex": 1,
+          "feedback": "Right. The problem isn't tech, or the amount, or the asset class — it's concentration. One bad earnings call or a corporate scandal could wipe out a significant chunk overnight. Spreading across at least 15-20 names dramatically reduces that risk."
+        },
+        {
+          "type": "slide",
+          "layout": "title",
+          "eyebrow": "Lesson complete",
+          "heading": "You've learned the <em>free lunch</em>",
+          "body": "You understand diversification, the difference between volatility and permanent loss, and the rules of thumb for building a balanced portfolio. One more lesson — the final assessment — and you've completed the course.",
+          "media": {
+            "videoId": "7579561",
+            "label": "Exchange Display",
+            "credit": "Tima Miroshnichenko",
+            "url": "https://www.pexels.com/video/stock-market-exchanges-on-display-7579561/"
+          },
+          "narration": "Lesson complete. You now understand diversification, the important difference between volatility and permanent loss, and the rules of thumb for building a balanced portfolio. One more lesson, the final assessment, and you will have completed the course."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Course Assessment",
+      "complete": 0,
+      "segments": [
+        {
+          "type": "slide",
+          "layout": "title",
+          "eyebrow": "Module 5",
+          "heading": "Course <em>Assessment</em>",
+          "body": "Five questions covering everything you've learned. Take your time — there's no clock.",
+          "media": {
+            "videoId": "7578613",
+            "label": "Market Analysis",
+            "credit": "Tima Miroshnichenko",
+            "url": "https://www.pexels.com/video/stock-market-movement-analysis-7578613/"
+          },
+          "narration": "You have reached the final module: the course assessment. There are five questions covering everything you have learned. Take your time. There is no clock."
+        },
+        {
+          "type": "interaction",
+          "kind": "mcq",
+          "question": "Q1 — A stock has been falling for several months and is now 25% below its peak. This best describes:",
+          "options": [
+            "A bull market",
+            "A bear market",
+            "Normal volatility",
+            "A market crash"
+          ],
+          "correctIndex": 1,
+          "feedback": "Correct. A drop of 20% or more from recent highs is the textbook definition of a bear market."
+        },
+        {
+          "type": "interaction",
+          "kind": "mcq",
+          "question": "Q2 — You want to buy Infosys only if it drops to ₹1,800 or lower. Which order type should you use?",
+          "options": [
+            "Market order",
+            "Limit order at ₹1,800",
+            "Stop-loss at ₹1,800",
+            "Trailing stop at ₹1,800"
+          ],
+          "correctIndex": 1,
+          "feedback": "Right. A buy limit order only executes at your specified price or better — perfect for waiting on a target entry."
+        },
+        {
+          "type": "interaction",
+          "kind": "truefalse",
+          "question": "Q3 — The 'ask' price on a quote is the lowest price a seller is currently willing to accept.",
+          "options": ["True", "False"],
+          "correctIndex": 0,
+          "feedback": "Correct. The ask is the supply side; the bid is the demand side. The gap between them is the spread."
+        },
+        {
+          "type": "interaction",
+          "kind": "mcq",
+          "question": "Q4 — Which of these would NOT typically cause a stock's price to move?",
+          "options": [
+            "A surprise quarterly earnings beat",
+            "An RBI interest-rate decision",
+            "A large mutual fund rebalancing its holdings",
+            "Whether the CEO wore a blue tie to the press conference"
+          ],
+          "correctIndex": 3,
+          "feedback": "Right. Earnings, rates, and institutional flows are real price drivers. Tie colour is not — though strange correlations have made for entertaining financial folklore."
+        },
+        {
+          "type": "interaction",
+          "kind": "mcq",
+          "question": "Q5 — A friend says: 'I'm holding 50% of my portfolio in one bank stock because I trust the bank.' Your best advice?",
+          "options": [
+            "Sounds great — conviction is what makes money.",
+            "Concentration is the biggest preventable risk. Spread across at least 15-20 positions in different sectors.",
+            "Sell everything and put it in gold.",
+            "Switch to a different bank stock."
+          ],
+          "correctIndex": 1,
+          "feedback": "Correct. No matter how much you trust a company, a 50% concentration in any single stock is unacceptable risk. One earnings miss, scandal, or regulatory issue could halve their savings overnight."
+        },
+        {
+          "type": "slide",
+          "layout": "title",
+          "eyebrow": "Congratulations",
+          "heading": "You've <em>completed</em> the course",
+          "body": "You can now recognise market trends, read quotes, place the right order type, and build a diversified portfolio. The market keeps teaching — keep learning. Well done.",
+          "media": {
+            "videoId": "30289541",
+            "label": "Chart Analysis",
+            "credit": "Sourav Sharma",
+            "url": "https://www.pexels.com/video/real-time-stock-market-chart-analysis-footage-30289541/"
+          },
+          "narration": "Congratulations. You have completed Stock Market Essentials. You can now recognise market trends, read quotes, place the right order type, and build a diversified portfolio. The market keeps teaching, so keep learning. Well done."
+        }
+      ]
+    }
+  ]
+}
