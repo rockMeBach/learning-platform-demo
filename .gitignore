@@ -429,5 +429,5 @@ FodyWeavers.xsd
 *.msp
 
 # custom ignore files
-./learning-platform.zip
-./scraper.py
+learning-platform.zip
+scraper.py
