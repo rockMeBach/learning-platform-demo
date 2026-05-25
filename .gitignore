@@ -431,3 +431,4 @@ FodyWeavers.xsd
 # custom ignore files
 learning-platform.zip
 scraper.py
+transcribe.py

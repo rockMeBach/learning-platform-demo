@@ -1,0 +1,671 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:02.000
+Hi everyone, welcome back.
+
+00:00:02.000 --> 00:00:07.000
+Now we have seen the concept of ATM, ATM, ATM, Intrancy, Value and Extrancy.
+
+00:00:07.000 --> 00:00:13.000
+I will show you the same website and I am going to take you to the NSC option chain.
+
+00:00:13.000 --> 00:00:19.000
+NSC option chain is basically the website of the NSC India, where we are going to write different tracks.
+
+00:00:19.000 --> 00:00:24.000
+As I saw in my example, we have also seen 100 tracks, 110 tracks, 80 tracks.
+
+00:00:25.000 --> 00:00:31.000
+Same thing, we are going to write all the tracks on the same page and we are going to give you an option chain name.
+
+00:00:31.000 --> 00:00:36.000
+So I will take you to the next one and we will talk about how we will know how to write it.
+
+00:00:36.000 --> 00:00:42.000
+What is the ATM, what is the ATM, what is the ATM and we will do some calculations for Intrancy and Extrancy Value also.
+
+00:00:42.000 --> 00:00:45.000
+So I am going to show you the option chain of this NSC.
+
+00:00:45.000 --> 00:00:51.000
+As you can see, here it is nifty, so you can see that I have chosen nifty here.
+
+00:00:51.000 --> 00:00:54.000
+You can choose stocks from index.
+
+00:00:54.000 --> 00:01:00.000
+I have chosen the current expiry, weekly expiry 22 August.
+
+00:01:00.000 --> 00:01:06.000
+And as I have said, as you can see the current price of nifty is going to be 24541.
+
+00:01:06.000 --> 00:01:10.000
+And this is how the entire option chain looks like.
+
+00:01:10.000 --> 00:01:17.000
+Now if you see, here there is a gray color on the right side and there is gray on the right side.
+
+00:01:17.000 --> 00:01:22.000
+We always see on the left side, there are calls and there are putts on the right side.
+
+00:01:22.000 --> 00:01:31.000
+The middle line, you will see the strike price as we have said, we can trade in different strikes and you will see the strike price of nifty.
+
+00:01:31.000 --> 00:01:35.000
+So first I will discuss a little bit about what are the different columns.
+
+00:01:35.000 --> 00:01:40.000
+The first column is the strike, it is clear that we can trade in different strikes.
+
+00:01:40.000 --> 00:01:46.000
+On the left side, the OIS, which is called open interest, this is called calls open interest.
+
+00:01:46.000 --> 00:01:48.000
+And then the change in open interest.
+
+00:01:48.000 --> 00:01:53.000
+Change in open interest means that how many quantity change are there in color and today.
+
+00:01:53.000 --> 00:01:56.000
+In color and today's situation, how many quantities change there?
+
+00:01:56.000 --> 00:01:58.000
+We call it change in open interest.
+
+00:01:58.000 --> 00:02:00.000
+What is open interest?
+
+00:02:00.000 --> 00:02:03.000
+I will tell you in the next one, we will talk about it later.
+
+00:02:03.000 --> 00:02:07.000
+But we just thought that we have a column open interest and change in open interest.
+
+00:02:07.000 --> 00:02:11.000
+So, we have a column open interest and change in open interest.
+
+00:02:11.000 --> 00:02:18.000
+Then we have the volume, this is a daily volume, how much is the volume of our purchase?
+
+00:02:18.000 --> 00:02:22.000
+I.V. I.V. is the implied volatility.
+
+00:02:22.000 --> 00:02:26.000
+We will discuss this later, when I will tell you about the other Greeks.
+
+00:02:26.000 --> 00:02:29.000
+So, we will talk about I.V. then.
+
+00:02:29.000 --> 00:02:35.000
+LTP is the last traded price, which means LTP is the life price.
+
+00:02:35.000 --> 00:02:39.000
+The change means that what movement is there in the future?
+
+00:02:39.000 --> 00:02:44.000
+Green color means positive movement and red is the negative movement.
+
+00:02:44.000 --> 00:02:52.000
+And the last column of the right, the bid quantity, ask quantity, bid price and ask price.
+
+00:02:52.000 --> 00:02:56.000
+Basically, the live bid and ask market is showing that.
+
+00:02:56.000 --> 00:03:00.000
+So, the same thing you will see in the right side for the puts.
+
+00:03:00.000 --> 00:03:05.000
+But the important point is that we are looking at strikes.
+
+00:03:05.000 --> 00:03:07.000
+So, let me zoom in a little bit.
+
+00:03:07.000 --> 00:03:11.000
+And let us see what the difference between strikes is.
+
+00:03:11.000 --> 00:03:14.000
+So, because the current price is now at a price of 50,000 rupees.
+
+00:03:14.000 --> 00:03:17.000
+That is approximately 254,541.
+
+00:03:17.000 --> 00:03:20.000
+That means, the price is around Rs.4,550.
+
+00:03:20.000 --> 00:03:23.000
+So, you will see that Rs.4,550 is the same.
+
+00:03:23.000 --> 00:03:27.000
+You can see the difference between the green and white color.
+
+00:03:28.000 --> 00:03:32.000
+Now, on the left side, we have seen that all the calls are seen.
+
+00:03:32.000 --> 00:03:36.000
+Now, we have just talked about the strike price.
+
+00:03:36.000 --> 00:03:43.000
+If the case of calls is increasing, then it becomes out of the money.
+
+00:03:43.000 --> 00:03:52.000
+So, you will see that, as we are going down, Rs.4,640, Rs.2,650, Rs.2,720, Rs.2,750, Rs.2,420.
+
+00:03:53.000 --> 00:03:56.000
+As we are going down, the strike is increasing.
+
+00:03:56.000 --> 00:03:58.000
+We are going out of the money.
+
+00:03:58.000 --> 00:04:02.000
+That is the white portion, which is the out of the money option.
+
+00:04:02.000 --> 00:04:06.000
+In the case of calls, OTM is the option.
+
+00:04:06.000 --> 00:04:10.000
+And the great option is the money option.
+
+00:04:10.000 --> 00:04:12.000
+In the case of calls.
+
+00:04:12.000 --> 00:04:16.000
+Because, you will see that the price here is already high.
+
+00:04:16.000 --> 00:04:18.000
+That is, the level is going up.
+
+00:04:18.000 --> 00:04:21.000
+Now, the option has already been added to some intrinsic value.
+
+00:04:21.000 --> 00:04:24.000
+And if I see on the right side, there are some puts.
+
+00:04:24.000 --> 00:04:27.000
+So, the white part of the OTM has already been added.
+
+00:04:27.000 --> 00:04:29.000
+So, these are all the OTM.
+
+00:04:29.000 --> 00:04:33.000
+And the gray ones are again two are the ITMs.
+
+00:04:33.000 --> 00:04:34.000
+This is your ITM.
+
+00:04:34.000 --> 00:04:38.000
+So, first of all, just by looking at the colors, we will see that,
+
+00:04:38.000 --> 00:04:42.000
+The white color is the OTM and the gray color is the same.
+
+00:04:42.000 --> 00:04:46.000
+And obviously, the Rs.4,550 is the raw one.
+
+00:04:46.000 --> 00:04:49.000
+This is our addamanie.
+
+00:04:49.000 --> 00:04:51.000
+Because, this is exactly the close to nifty.
+
+00:04:51.000 --> 00:04:53.000
+The nifty is 24, 540.
+
+00:04:53.000 --> 00:04:55.000
+So, this is the addamanie.
+
+00:04:55.000 --> 00:04:57.000
+Now, let's look at our LTP.
+
+00:04:57.000 --> 00:05:01.000
+So, if we talk about LTPs, which is this column,
+
+00:05:01.000 --> 00:05:03.000
+This column is the LTP column.
+
+00:05:03.000 --> 00:05:07.000
+So, you can see that, as we are going into the money,
+
+00:05:07.000 --> 00:05:10.000
+The price of calls is increasing.
+
+00:05:10.000 --> 00:05:12.000
+Which is also because, we already said that,
+
+00:05:12.000 --> 00:05:14.000
+In the money, we already,
+
+00:05:14.000 --> 00:05:17.000
+The nifty is going up.
+
+00:05:17.000 --> 00:05:20.000
+So, if we don't move the market,
+
+00:05:20.000 --> 00:05:22.000
+We will get some money.
+
+00:05:22.000 --> 00:05:25.000
+So, the prices of the money, which are increasing in LTP,
+
+00:05:25.000 --> 00:05:27.000
+They are going to get expensive.
+
+00:05:27.000 --> 00:05:30.000
+And the amount of money, which is so far,
+
+00:05:30.000 --> 00:05:31.000
+They will be cheap.
+
+00:05:31.000 --> 00:05:33.000
+You can see, there is also a 20 rupees option.
+
+00:05:33.000 --> 00:05:36.000
+Similarly, if I talk about the boot,
+
+00:05:36.000 --> 00:05:37.000
+As we go to the OTM,
+
+00:05:37.000 --> 00:05:40.000
+As my strike will be less,
+
+00:05:40.000 --> 00:05:41.000
+In the case of boots,
+
+00:05:41.000 --> 00:05:43.000
+My premium will be less.
+
+00:05:43.000 --> 00:05:45.000
+And similarly, if they will come down,
+
+00:05:45.000 --> 00:05:46.000
+They will be more premium.
+
+00:05:46.000 --> 00:05:48.000
+So, this is our premium.
+
+00:05:48.000 --> 00:05:50.000
+So, let us do some calculation.
+
+00:05:50.000 --> 00:05:52.000
+Now, let me do some calculation for you.
+
+00:05:52.000 --> 00:05:53.000
+Listen to me.
+
+00:05:53.000 --> 00:05:54.000
+Listen to me.
+
+00:05:54.000 --> 00:05:57.000
+We are going to buy an Indamanie call option,
+
+00:05:57.000 --> 00:05:59.000
+Because, we will get the market up.
+
+00:05:59.000 --> 00:06:01.000
+So, the 4-5-100.
+
+00:06:01.000 --> 00:06:03.000
+The call we are going to buy,
+
+00:06:03.000 --> 00:06:05.000
+Which is 176 rupees.
+
+00:06:05.000 --> 00:06:08.000
+Which is 176 rupees.
+
+00:06:08.000 --> 00:06:11.000
+So, if we don't move the market,
+
+00:06:11.000 --> 00:06:13.000
+What will our profit and loss be?
+
+00:06:13.000 --> 00:06:14.000
+If we buy it,
+
+00:06:14.000 --> 00:06:15.000
+Why are we buying it?
+
+00:06:15.000 --> 00:06:17.000
+It seems to me that,
+
+00:06:17.000 --> 00:06:18.000
+Expiry will come,
+
+00:06:18.000 --> 00:06:19.000
+And drop the nifty job,
+
+00:06:19.000 --> 00:06:21.000
+And it will go up.
+
+00:06:21.000 --> 00:06:22.000
+So, let's do the calculation.
+
+00:06:22.000 --> 00:06:24.000
+First, we know that,
+
+00:06:24.000 --> 00:06:25.000
+The nifty is going to run,
+
+00:06:25.000 --> 00:06:26.000
+2, 5,
+
+00:06:26.000 --> 00:06:28.000
+2, 4, 5, 4, 0.
+
+00:06:28.000 --> 00:06:30.000
+2, 4, 5, 4, 0 is going to run.
+
+00:06:30.000 --> 00:06:31.000
+So,
+
+00:06:31.000 --> 00:06:33.000
+This 176 rupees,
+
+00:06:33.000 --> 00:06:35.000
+How much intrinsic value,
+
+00:06:35.000 --> 00:06:37.000
+How much extrinsic value,
+
+00:06:37.000 --> 00:06:38.000
+So,
+
+00:06:38.000 --> 00:06:40.000
+Because nifty is 40 points,
+
+00:06:40.000 --> 00:06:41.000
+If we calculate it,
+
+00:06:41.000 --> 00:06:42.000
+Because nifty,
+
+00:06:42.000 --> 00:06:49.000
+Because nifty is 40 points already in the money,
+
+00:06:49.000 --> 00:06:51.000
+Which is our intrinsic value,
+
+00:06:51.000 --> 00:06:54.000
+Which is our intrinsic value,
+
+00:06:54.000 --> 00:06:56.000
+It is already 40 points,
+
+00:06:56.000 --> 00:06:57.000
+For this strike.
+
+00:06:57.000 --> 00:06:59.000
+How we calculated it,
+
+00:06:59.000 --> 00:07:01.000
+2, 4, 5, 4, 0, minus,
+
+00:07:01.000 --> 00:07:03.000
+24, 500, which is our strike price,
+
+00:07:03.000 --> 00:07:04.000
+That means,
+
+00:07:04.000 --> 00:07:06.000
+40 points is my intrinsic value.
+
+00:07:06.000 --> 00:07:08.000
+That means, if nifty is also moved,
+
+00:07:08.000 --> 00:07:10.000
+So, we will get 40 points back.
+
+00:07:10.000 --> 00:07:12.000
+And the remaining remaining,
+
+00:07:12.000 --> 00:07:14.000
+136.35,
+
+00:07:14.000 --> 00:07:17.000
+That is our intrinsic value.
+
+00:07:17.000 --> 00:07:19.000
+So, how much is our extrinsic value,
+
+00:07:19.000 --> 00:07:22.000
+136.45 or 136?
+
+00:07:22.000 --> 00:07:24.000
+What does it mean?
+
+00:07:24.000 --> 00:07:26.000
+If nifty is 20 points,
+
+00:07:26.000 --> 00:07:27.000
+Why is it 20 points?
+
+00:07:27.000 --> 00:07:29.000
+Because we have expiring,
+
+00:07:29.000 --> 00:07:30.000
+For 22 points,
+
+00:07:30.000 --> 00:07:31.000
+So, if nifty is 20 points,
+
+00:07:31.000 --> 00:07:33.000
+If we do not move one point,
+
+00:07:33.000 --> 00:07:35.000
+Then how much will it be?
+
+00:07:35.000 --> 00:07:37.000
+136 points will be lost,
+
+00:07:37.000 --> 00:07:39.000
+Which is the extrinsic value.
+
+00:07:39.000 --> 00:07:41.000
+Because we already discussed,
+
+00:07:41.000 --> 00:07:43.000
+The loss of extrinsic value is the loss of the loss.
+
+00:07:43.000 --> 00:07:45.000
+So, this is the case of ITM.
+
+00:07:45.000 --> 00:07:47.000
+Let us see one example.
+
+00:07:47.000 --> 00:07:49.000
+In the case of OTM also.
+
+00:07:49.000 --> 00:07:51.000
+So, if nifty is too much,
+
+00:07:51.000 --> 00:07:54.000
+It will be moved up to 400 to 700.
+
+00:07:54.000 --> 00:07:57.000
+It will be moved up to 400 to 700.
+
+00:07:57.000 --> 00:07:59.000
+So, I will buy the call of 400 to 700,
+
+00:07:59.000 --> 00:08:01.000
+Which is 72 rupees.
+
+00:08:01.000 --> 00:08:03.000
+Because 72 rupees is going to be going.
+
+00:08:03.000 --> 00:08:07.000
+So, again we can calculate our positive profit and loss.
+
+00:08:07.000 --> 00:08:09.000
+Now, why is the 470 now?
+
+00:08:09.000 --> 00:08:11.000
+It is out of the money.
+
+00:08:11.000 --> 00:08:13.000
+So, this is completely 72 rupees.
+
+00:08:13.000 --> 00:08:15.000
+It is my extrinsic value.
+
+00:08:15.000 --> 00:08:19.000
+This complete 72 rupees is my extrinsic value.
+
+00:08:19.000 --> 00:08:23.000
+Means, if nifty expires until 400 to 700,
+
+00:08:23.000 --> 00:08:24.000
+It is going to be down.
+
+00:08:24.000 --> 00:08:26.000
+So, this is completely 72 rupees.
+
+00:08:26.000 --> 00:08:27.000
+I will give it to me.
+
+00:08:27.000 --> 00:08:28.000
+Because this is completely,
+
+00:08:28.000 --> 00:08:29.000
+It is completely extrinsic value.
+
+00:08:29.000 --> 00:08:31.000
+So, this is the intrinsic value extrinsic value.
+
+00:08:31.000 --> 00:08:34.000
+I can calculate very easily with very little extrinsic value.
+
+00:08:34.000 --> 00:08:37.000
+Using this excel or using this page,
+
+00:08:37.000 --> 00:08:40.000
+You can get a harsh tricter intrinsic value extrinsic value.
+
+00:08:40.000 --> 00:08:43.000
+Similarly, let's do one calculation for puts also.
+
+00:08:43.000 --> 00:08:46.000
+I think the market will be down.
+
+00:08:46.000 --> 00:08:48.000
+It will be down.
+
+00:08:48.000 --> 00:08:51.000
+But I think I am looking at 400 to 600.
+
+00:08:51.000 --> 00:08:53.000
+I think that 400 to 600 will be down.
+
+00:08:53.000 --> 00:08:55.000
+That 400 will be down.
+
+00:08:55.000 --> 00:08:57.000
+Till expires.
+
+00:08:57.000 --> 00:09:00.000
+So, I am buying 400 to 600 putt.
+
+00:09:00.000 --> 00:09:01.000
+So, I am going to give it to me.
+
+00:09:01.000 --> 00:09:03.000
+Which is approximately 137 rupees.
+
+00:09:03.000 --> 00:09:05.000
+So, this putt option is going to be down.
+
+00:09:05.000 --> 00:09:06.000
+I am going to buy it.
+
+00:09:06.000 --> 00:09:07.000
+I am buying it.
+
+00:09:07.000 --> 00:09:08.000
+I am buying it.
+
+00:09:08.000 --> 00:09:10.000
+I am buying it because I think it is down.
+
+00:09:10.000 --> 00:09:12.000
+Till expires until 20 to 600 will be down.
+
+00:09:12.000 --> 00:09:13.000
+Now, it is down.
+
+00:09:13.000 --> 00:09:15.000
+Now, this time, this nifty already has to be down.
+
+00:09:15.000 --> 00:09:16.000
+It is down.
+
+00:09:16.000 --> 00:09:17.000
+Means, it already has to be down.
+
+00:09:17.000 --> 00:09:18.000
+Now, it is down.
+
+00:09:18.000 --> 00:09:19.000
+Means, it already has to be down.
+
+00:09:19.000 --> 00:09:20.000
+Means, there are already 60 points in the money.
+
+00:09:20.000 --> 00:09:21.000
+What is this?
+
+00:09:21.000 --> 00:09:23.000
+We have calculated it for 20 to 600 minus,
+
+00:09:23.000 --> 00:09:26.000
+That is 20 to 500 is the current price of a nifty.
+
+00:09:26.000 --> 00:09:28.000
+So, 60 points in the money.
+
+00:09:28.000 --> 00:09:38.000
+That means my intrinsic value is 60 points and my extrinsic value is different from the one that is 137-60
+
+00:09:38.000 --> 00:09:42.000
+That means 77 points.
+
+00:09:42.000 --> 00:09:46.000
+77 points is my extrinsic value.
+
+00:09:46.000 --> 00:09:57.000
+If the market does not move and expires here, then my total loss will be 77 points, not 137 points.
+
+00:09:57.000 --> 00:10:00.000
+Because I have already got the intrinsic value.
+
+00:10:00.000 --> 00:10:05.000
+So, you can see the options of NSC that are big and this is the data.
+
+00:10:05.000 --> 00:10:07.000
+This is the update in every 2-3 minutes.
+
+00:10:07.000 --> 00:10:09.000
+So, like you will see the market life.
+
+00:10:09.000 --> 00:10:13.000
+You will see the life prices in every 2-3 minutes.
+
+00:10:13.000 --> 00:10:15.000
+And you can calculate your calculation.
+
+00:10:15.000 --> 00:10:18.000
+What is your intrinsic value? What is extrinsic value?
+
+00:10:18.000 --> 00:10:19.000
+We will see the color code.
+
+00:10:19.000 --> 00:10:21.000
+We will see that the OTM is here.
+
+00:10:21.000 --> 00:10:22.000
+This is the OTM.
+
+00:10:22.000 --> 00:10:24.000
+The top item is there.
+
+00:10:24.000 --> 00:10:26.000
+And we can do the trading on its basis.
+

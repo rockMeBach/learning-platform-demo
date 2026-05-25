@@ -1,91 +1,101 @@
-# Stock Market Essentials - Narrated Lesson Module
+# Options Unlocked — Local-video Lesson Module
+
+A Skilling-Academy-styled wrapper around a local MP4 video, sliced into three learning levels (L1 / L2 / L3) with quiz checkpoints in between. Custom-styled captions render from a WebVTT file.
 
 ## File structure
 
 ```
-lesson-module/
-├── lesson.html       ← the page (open this in browser)
-├── styles.css        ← all visual styling
-├── player.js         ← player logic (TTS, controls, sidebar, etc.)
-├── course.json       ← all course content (lessons, slides, narration)
-└── videos/           ← (optional) local Pexels MP4s named {id}.mp4
+lesson-module-deploy/
+├── lesson.html       ← page shell
+├── styles.css        ← visual styling
+├── player.js         ← player logic
+├── course.json       ← lesson content & segment timestamps
+├── video.mp4         ← YOU PROVIDE — your downloaded video
+├── subtitles.vtt     ← captions in WebVTT format
+├── vercel.json       ← routing & cache headers
+└── .gitignore
 ```
 
-## Running
+## Quick setup
 
-Because the page loads `course.json` via `fetch()`, it must be served over HTTP — opening with `file://` will fail with a CORS error.
-
-The easiest way:
+1. Drop your `video.mp4` next to `lesson.html` (path is `./video.mp4` by default).
+2. Replace `subtitles.vtt` with the captions for your video — see below.
+3. Serve locally:
 
 ```bash
-cd lesson-module
-python -m http.server 8000
+python3 -m http.server 8000
+# open http://localhost:8000/
 ```
 
-Then open: <http://localhost:8000/lesson.html>
+Or deploy:
 
-(If you don't have Python: `npx serve .` works too.)
+```bash
+npx vercel --prod
+```
 
-## Editing content
+Note: `git`/Vercel commits exclude MP4s via `.gitignore`. To deploy with the video, remove the `*.mp4` rule, or host the MP4 on a CDN and update `course.json`'s `video.src` to its URL.
 
-Everything you write — slide text, narration, interactions, video IDs — lives in `course.json`. No code changes needed to add new lessons, swap videos, or rewrite narration. The schema:
+## Getting subtitles for your video
+
+The `subtitles.vtt` file uses standard WebVTT format. Easiest ways to generate it:
+
+**YouTube Studio** (if you uploaded the video there):
+- Subtitles → ⋮ menu → Download → `.vtt`
+
+**Whisper** (local, free, very accurate):
+```bash
+pip install openai-whisper
+whisper video.mp4 --output_format vtt --model small
+```
+
+**Hand-written** — see the existing `subtitles.vtt` for the format. Each cue is:
+```
+00:00:04.500 --> 00:00:09.000
+The caption text here.
+Can span multiple lines.
+```
+
+## How content is structured
+
+`course.json` defines the video source and slices it into three lessons:
 
 ```jsonc
 {
+  "video": {
+    "src": "./video.mp4",
+    "subtitles": "./subtitles.vtt"
+  },
   "lessons": [
     {
       "id": 1,
-      "title": "...",
+      "title": "Level 1 — Basics & Recall",
       "segments": [
-        {
-          "type": "slide",
-          "layout": "title|bullets|stats|definition|split",
-          "eyebrow": "section label",
-          "heading": "Main heading <em>can use HTML</em>",
-          "body": "Optional body text",
-          "bullets": ["Optional list", "of bullets"],
-          "stats": [{"num": "₹2,847", "lbl": "Label"}],
-          "definition": {"term": "Word", "meaning": "Definition"},
-          "media": {
-            "videoId": "7579577",
-            "label": "Title",
-            "credit": "Photographer",
-            "url": "https://www.pexels.com/video/.../"
-          },
-          "narration": "What the TTS voice will read."
-        },
-        {
-          "type": "interaction",
-          "kind": "truefalse|mcq",
-          "question": "...",
-          "options": ["A", "B", "C"],
-          "correctIndex": 1,
-          "feedback": "Explanation after answering."
-        }
+        { "type": "video", "videoStart": 0, "videoEnd": 212, ... },
+        { "type": "interaction", "kind": "truefalse", ... }
       ]
     }
   ]
 }
 ```
 
-## Videos
-
-Pexels CDN often blocks direct embedding. Use `download_pexels_videos.py` (provided separately) to populate a `videos/` folder:
-
-```bash
-export PEXELS_API_KEY="..."
-python download_pexels_videos.py --out lesson-module/videos
-```
-
-Files save as `{video_id}.mp4` — the player tries the local copy first, then falls back to Pexels CDN URLs.
+The player loads the video once, then plays only `[videoStart, videoEnd)` for each segment, pausing precisely at the end to inject the next quiz.
 
 ## Player controls
 
 | Button | Function | Keyboard |
 |---|---|---|
-| ▶ / ⏸ | Play / Pause narration | Space |
-| ⏮ / ⏭ | Previous / Next segment | ← / → |
+| ▶ / ⏸ | Play / Pause | Space |
+| ⏪ / ⏩ | Skip ±10 seconds | ← / → · J / L |
 | ↻ | Restart current lesson | — |
 | 🔊 / 🔇 | Mute / Unmute | M |
-| 1× | Cycle speed: 1× → 1.25× → 1.5× → 0.75× | — |
+| CC | Toggle captions | C |
+| 1× | Cycle speed: 1× → 1.25× → 1.5× → 2× → 0.5× → 0.75× | — |
 | ⛶ | Fullscreen toggle | F |
+
+The progress bar shows the lesson's local timeline (only the current lesson's video parts). Yellow markers indicate quiz checkpoints. Hover for a timestamp preview; drag to scrub.
+
+## About the captions
+
+The browser's default subtitle styling is hidden — captions are rendered into a custom `<div class="caption-bar">` so they get full Skilling-Academy styling (large white text, dark backdrop, centered, scales up in fullscreen). The `<track>` element loads the cues; we listen to its `cuechange` events to push the active cue text into our styled div.
+
+To restyle captions, edit `.caption-bar` in `styles.css`.

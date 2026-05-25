@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Stock Market Essentials — Narrated Module</title>
+<title>Options Unlocked — Skilling Academy</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -16,7 +16,7 @@
     <div class="brand-mark"><span>SA</span></div>
     <div class="brand-text">
       <div class="name">Skilling Academy</div>
-      <div class="sub">Stock Market Essentials</div>
+      <div class="sub" id="headerSubtitle">Options Unlocked</div>
     </div>
   </div>
   <div class="header-progress">Course Progress: <b id="courseProgress">0%</b></div>
@@ -29,28 +29,17 @@
 
     <div class="player" id="player">
       <div class="stage" id="stage">
-        <video class="stage-video" id="stageVideo" muted loop playsinline preload="auto"></video>
-        <div class="stage-video-tint" id="stageVideoTint"></div>
-        <div class="video-credit" id="videoCredit"></div>
+        <video id="video" preload="auto" playsinline crossorigin="anonymous">
+          <track id="subtitleTrack" kind="subtitles" srclang="en" label="English" default>
+        </video>
 
-        <div class="stage-watermark-left">
-          <div class="leaf"></div>
-          <span>Skilling<br><small style="font-weight:400;color:var(--rf-green);">Academy</small></span>
-        </div>
-        <div class="stage-watermark-right">
-          <div class="nsdc"></div>
-          <span>NSDC</span>
-        </div>
+        <!-- Custom caption bar — we render captions here for full styling control -->
+        <div class="caption-bar" id="captionBar"></div>
 
-        <div class="slide-bg-decoration deco-1"></div>
-        <div class="slide-bg-decoration deco-2"></div>
+        <!-- Brief banner shown when entering a new video segment -->
+        <div class="segment-banner" id="segmentBanner"></div>
 
-        <div class="tts-warn" id="ttsWarn">🔊 Click play — your browser needs a click to enable narration</div>
-
-        <div class="slide-area" id="slideArea"></div>
-
-        <div class="subtitles hidden" id="subtitles"></div>
-
+        <!-- Quiz overlay between segments -->
         <div class="interaction-overlay" id="interactionOverlay">
           <span class="interaction-label" id="iLabel">◆ Quick Check</span>
           <div class="interaction-q" id="iQuestion"></div>
@@ -59,10 +48,11 @@
           <button class="continue-btn" id="iContinue">Continue Lesson →</button>
         </div>
 
+        <!-- Lesson-complete overlay -->
         <div class="complete-overlay" id="completeOverlay">
           <div class="icon">✓</div>
           <h2>Lesson Complete!</h2>
-          <p>Great work. The next module is unlocked in the sidebar.</p>
+          <p>Great work. Move on to the next level from the sidebar.</p>
           <button class="replay-btn" onclick="restartLesson()">↻ Replay Lesson</button>
         </div>
       </div>
@@ -81,14 +71,15 @@
         </div>
         <button class="ctrl-btn" id="restartBtn" data-tooltip="Restart lesson">↻</button>
         <button class="ctrl-btn" id="muteBtn" data-tooltip="Mute">🔊</button>
+        <button class="ctrl-btn active-state" id="ccBtn" data-tooltip="Hide captions">CC</button>
         <button class="ctrl-btn speed-btn" id="speedBtn" data-tooltip="Playback speed">1×</button>
         <button class="ctrl-btn" id="fullscreenBtn" data-tooltip="Fullscreen">⛶</button>
       </div>
     </div>
 
     <div class="lesson-footer">
-      <button class="lesson-nav-btn" onclick="goToLesson(-1)">‹ Previous Lesson</button>
-      <button class="lesson-nav-btn" onclick="goToLesson(1)">Next Lesson ›</button>
+      <button class="lesson-nav-btn" onclick="goToLesson(-1)">‹ Previous Level</button>
+      <button class="lesson-nav-btn" onclick="goToLesson(1)">Next Level ›</button>
     </div>
   </div>
 
