@@ -20,30 +20,66 @@
           "type": "video",
           "label": "Part 1 of 3",
           "heading": "Introduction & the Option Chain layout",
-          "description": "What the NSE Option Chain is, how to navigate it, and what each column means (OI, Volume, IV, LTP, Bid/Ask).",
+          "description": "What the NSE Option Chain is, how to navigate it, and what each column means (Strike, OI, Change in OI, Volume, IV, LTP, Bid/Ask).",
           "videoStart": 0,
-          "videoEnd": 212
+          "videoEnd": 212,
+          "popups": [
+            {
+              "popupAt": 75,
+              "kind": "mcq",
+              "question": "Pause check: Which underlying and spot price is being analyzed in this video?",
+              "options": [
+                "Bank Nifty — around 51,000",
+                "Nifty — around 24,541",
+                "Sensex — around 80,000",
+                "Reliance — around 2,800"
+              ],
+              "correctIndex": 1,
+              "feedback": "Right. The instructor is on the NSE option chain for Nifty, current spot around 24,541, weekly expiry 22 August. Every calculation we do next uses these numbers."
+            },
+            {
+              "popupAt": 95,
+              "kind": "truefalse",
+              "question": "Pause check: On the NSE Option Chain, Call options are listed on the LEFT side of the strike column and Put options on the RIGHT.",
+              "options": ["True", "False"],
+              "correctIndex": 0,
+              "feedback": "Correct. Calls always on the left, Puts on the right, with the strike price running down the middle. The grey shading on one side and white on the other tells you ITM vs OTM at a glance."
+            },
+            {
+              "popupAt": 145,
+              "kind": "mcq",
+              "question": "Quick check: We just covered the OI column. What does 'OI' stand for?",
+              "options": [
+                "Option Index — how strong the option is",
+                "Open Interest — total contracts currently outstanding",
+                "Order Indicator — pending buy orders",
+                "Option Income — premium collected by sellers"
+              ],
+              "correctIndex": 1,
+              "feedback": "Right. Open Interest is the running total of contracts that haven't been closed or exercised. The next column, 'Change in OI', shows how that total moved versus the previous day — a key signal of fresh positioning."
+            },
+            {
+              "popupAt": 195,
+              "kind": "mcq",
+              "question": "Quick check: Which column shows the price at which the contract was LAST traded?",
+              "options": [
+                "OI — Open Interest",
+                "IV — Implied Volatility",
+                "LTP — Last Traded Price",
+                "Volume"
+              ],
+              "correctIndex": 2,
+              "feedback": "Right. LTP = Last Traded Price (the 'live price'). Bid/Ask shows current quote sides, IV is implied volatility (covered in a later episode), and Volume is total contracts traded today."
+            }
+          ]
         },
         {
           "type": "interaction",
           "kind": "truefalse",
-          "question": "On the NSE Option Chain, Call options are listed on the left side of the strike price and Put options on the right.",
+          "question": "End of Level 1: 'Change in OI' shows how many contracts were traded today.",
           "options": ["True", "False"],
-          "correctIndex": 0,
-          "feedback": "Correct. The NSE Option Chain places Calls to the left of the strike column and Puts to the right — a layout convention you'll see on every Indian options screen."
-        },
-        {
-          "type": "interaction",
-          "kind": "mcq",
-          "question": "Which column on the Option Chain shows the latest price at which a contract actually traded?",
-          "options": [
-            "OI (Open Interest)",
-            "IV (Implied Volatility)",
-            "LTP (Last Traded Price)",
-            "Bid / Ask"
-          ],
-          "correctIndex": 2,
-          "feedback": "Correct — LTP, or Last Traded Price, is the most recent price at which the option contract was actually transacted. Bid/Ask shows the current quotes, IV shows expected volatility, and OI shows total outstanding contracts."
+          "correctIndex": 1,
+          "feedback": "False — that's the Volume column. 'Change in OI' shows how the total Open Interest moved since yesterday. The difference matters: high Volume + low Change in OI = lots of churn but no fresh positioning; high Change in OI = new conviction building at that strike."
         }
       ]
     },
@@ -58,30 +94,71 @@
           "type": "video",
           "label": "Part 2 of 3",
           "heading": "ITM / ATM / OTM colour codes + ITM Call calculation",
-          "description": "Identifying moneyness using the grey/white shading and working through the Intrinsic and Extrinsic Value of a real ITM Nifty 24,500 Call.",
+          "description": "Spotting moneyness by colour, identifying the ATM strike, and calculating Intrinsic + Extrinsic value for the ITM 24,500 Call.",
           "videoStart": 212,
-          "videoEnd": 465
+          "videoEnd": 465,
+          "popups": [
+            {
+              "popupAt": 275,
+              "kind": "mcq",
+              "question": "Pause check: On the CALLS side of the chain, what does a WHITE (unshaded) background tell you about the contract?",
+              "options": [
+                "It's In-the-Money — strike below spot",
+                "It's Out-of-the-Money — strike above spot",
+                "The contract just expired",
+                "It's illiquid"
+              ],
+              "correctIndex": 1,
+              "feedback": "Correct. For Calls, white = OTM (strike ABOVE spot — no intrinsic value yet). Grey = ITM (strike BELOW spot — option already has real value). On the Puts side it flips: grey/ITM strikes are ABOVE spot, white/OTM are BELOW."
+            },
+            {
+              "popupAt": 305,
+              "kind": "mcq",
+              "question": "Quick check: Spot is 24,541. Strike spacing is 50. Which strike is the ATM (At-the-Money)?",
+              "options": [
+                "24,500 — the strike just below spot",
+                "24,550 — the strike nearest to spot",
+                "24,600 — the next strike above spot",
+                "Whichever strike has the highest premium"
+              ],
+              "correctIndex": 1,
+              "feedback": "Right. The ATM is whichever strike sits closest to current spot. With spot at 24,541 and 50-rupee strike spacing, 24,550 is the nearest — that's the ATM, the dividing line between ITM and OTM on each side."
+            },
+            {
+              "popupAt": 355,
+              "kind": "truefalse",
+              "question": "Pause check: As you move from ATM into deeper ITM strikes on the Calls side, the LTP (option price) goes UP.",
+              "options": ["True", "False"],
+              "correctIndex": 0,
+              "feedback": "Correct. ITM Calls already have real moneyness baked in — that's the Intrinsic Value — so they cost more than ATM Calls. As you go further OTM, the price drops; the instructor pointed out strikes trading as low as ₹20."
+            },
+            {
+              "popupAt": 410,
+              "kind": "mcq",
+              "question": "Setup check: The instructor is about to buy the 24,500 Call. With spot at 24,541, what's the intrinsic value going to be — before he even tells you the premium?",
+              "options": [
+                "₹0 — it's an OTM Call",
+                "₹41 — that's max(Spot − Strike, 0)",
+                "₹500 — the strike price",
+                "Can't calculate without knowing the premium"
+              ],
+              "correctIndex": 1,
+              "feedback": "Right. Intrinsic Value of a Call = max(Spot − Strike, 0) = max(24,541 − 24,500, 0) = ₹41. Notice you didn't need the premium for this — Intrinsic is purely a function of spot vs strike. The instructor rounds to '40 points' in the video, but the precise number is 41."
+            }
+          ]
         },
         {
           "type": "interaction",
           "kind": "mcq",
-          "question": "On the NSE Option Chain, what does the GREY (shaded) background indicate for a contract?",
+          "question": "End of Level 2: The instructor says the 24,500 Call is trading at ₹176, with ₹41 of Intrinsic Value. What's the Extrinsic Value, and what does it represent?",
           "options": [
-            "The contract is Out-of-the-Money (OTM)",
-            "The contract is In-the-Money (ITM)",
-            "The contract is At-the-Money (ATM)",
-            "The contract has expired"
+            "₹0 — there's no extrinsic when the option is ITM",
+            "₹41 — same as intrinsic",
+            "₹135 — time + volatility premium that decays toward expiry",
+            "₹176 — the full premium"
           ],
-          "correctIndex": 1,
-          "feedback": "Correct. NSE shades ITM contracts in grey, while OTM contracts are shown on a white background. The strike closest to spot is the ATM."
-        },
-        {
-          "type": "interaction",
-          "kind": "mcq",
-          "question": "Nifty Spot = 24,580. You buy a 24,500 Call at a premium of ₹150. What is the Intrinsic Value of this option?",
-          "options": ["₹0", "₹70", "₹80", "₹150"],
           "correctIndex": 2,
-          "feedback": "Correct. Intrinsic Value of a Call = max(Spot − Strike, 0) = max(24,580 − 24,500, 0) = ₹80. The remaining ₹70 of the ₹150 premium is Extrinsic (time) Value — what decays as expiry approaches."
+          "feedback": "Right. Premium = Intrinsic + Extrinsic, always. ₹176 − ₹41 = ₹135 of Extrinsic Value. The instructor rounds to ₹136 (using 40-point intrinsic) — same idea. That ₹135 is time-value: if Nifty doesn't move further, it all melts away by expiry. The intrinsic ₹41 stays as long as spot remains above 24,500."
         }
       ]
     },
@@ -96,43 +173,66 @@
           "type": "video",
           "label": "Part 3 of 3",
           "heading": "OTM Call, ITM Put, and your real risk as a buyer",
-          "description": "Calculating Intrinsic & Extrinsic Value for an OTM Call and an ITM Put, plus why Extrinsic Value is the real risk for an option buyer.",
+          "description": "Calculating Intrinsic & Extrinsic for an OTM Call (24,700) and an ITM Put (24,600), plus the key takeaway about Extrinsic = the buyer's real risk.",
           "videoStart": 465,
-          "videoEnd": 628
+          "videoEnd": 628,
+          "popups": [
+            {
+              "popupAt": 500,
+              "kind": "mcq",
+              "question": "Scenario check: The instructor just set up the 24,700 Call at ₹72. With spot at 24,541, what's the Intrinsic Value?",
+              "options": [
+                "₹0 — strike is ABOVE spot, so the call is OTM",
+                "₹72 — the entire premium is intrinsic",
+                "₹159 — Strike minus Spot",
+                "₹24,700 — the strike price"
+              ],
+              "correctIndex": 0,
+              "feedback": "Right. The 24,700 Call is OTM (strike ABOVE spot). Intrinsic = max(Spot − Strike, 0) = max(24,541 − 24,700, 0) = ₹0. So the entire ₹72 premium is Extrinsic Value — pure time and volatility."
+            },
+            {
+              "popupAt": 525,
+              "kind": "truefalse",
+              "question": "Same trade — 24,700 Call at ₹72. If Nifty expires AT or BELOW 24,700, the buyer loses the entire ₹72 premium.",
+              "options": ["True", "False"],
+              "correctIndex": 0,
+              "feedback": "Correct. An OTM Call has zero intrinsic and only extrinsic value. If spot doesn't push above the strike by expiry, every rupee of the ₹72 decays to zero. That's the textbook risk of buying OTM options — you need direction AND speed."
+            },
+            {
+              "popupAt": 570,
+              "kind": "mcq",
+              "question": "Quick math: The 24,600 Put is at ₹137, spot is 24,541. What's the Intrinsic Value of this Put?",
+              "options": [
+                "₹0 — Puts don't have intrinsic when ITM",
+                "₹59 — Strike minus Spot",
+                "₹137 — the entire premium",
+                "₹78 — premium minus 59"
+              ],
+              "correctIndex": 1,
+              "feedback": "Right. For a Put: Intrinsic = max(Strike − Spot, 0) = max(24,600 − 24,541, 0) = ₹59. The instructor rounds to '60 points' in the video — same idea. This makes the 24,600 Put an ITM Put (strike ABOVE spot, on the Put side)."
+            },
+            {
+              "popupAt": 595,
+              "kind": "truefalse",
+              "question": "Punchline check: If spot stays exactly at 24,541 till expiry, the buyer of the 24,600 Put (premium ₹137) loses the full ₹137.",
+              "options": ["True", "False"],
+              "correctIndex": 1,
+              "feedback": "False — listen to the closing argument. If spot stays at 24,541, only the ₹78 of Extrinsic Value decays. The ₹59 of Intrinsic is locked in — you can still exercise the right to sell at 24,600 when spot is 24,541. So the real loss is ₹78, not ₹137. This is THE point: Extrinsic Value is the buyer's structural, unavoidable risk."
+            }
+          ]
         },
         {
           "type": "interaction",
           "kind": "mcq",
-          "question": "Nifty Spot = 24,580. You buy a 24,700 Call at a premium of ₹40. What is the Intrinsic Value?",
+          "question": "End of Level 3 — Big-picture takeaway: As an option BUYER, which statement best describes your real risk on every position?",
           "options": [
-            "₹0 — the strike is above spot, so the call is OTM",
-            "₹40 — the entire premium is intrinsic",
-            "₹120 — the difference between strike and spot",
-            "₹24,700 — the strike price"
+            "The full premium is always lost; options expire worthless by default.",
+            "Intrinsic Value is the risk, since it can be wiped out if the market reverses.",
+            "Extrinsic Value is the structural risk — it decays to zero by expiry regardless of which way the underlying moves.",
+            "There is no real risk if you choose ITM options."
           ],
-          "correctIndex": 0,
-          "feedback": "Correct. For an OTM Call (Strike > Spot), Intrinsic Value = ₹0. The full ₹40 premium is Extrinsic Value — purely time and volatility. If Nifty stays below 24,700 until expiry, that entire ₹40 is lost."
-        },
-        {
-          "type": "interaction",
-          "kind": "mcq",
-          "question": "Nifty Spot = 24,580. You buy a 24,600 Put at a premium of ₹85. What's the Intrinsic Value, and what's the Extrinsic Value?",
-          "options": [
-            "Intrinsic ₹0, Extrinsic ₹85",
-            "Intrinsic ₹20, Extrinsic ₹65",
-            "Intrinsic ₹65, Extrinsic ₹20",
-            "Intrinsic ₹85, Extrinsic ₹0"
-          ],
-          "correctIndex": 1,
-          "feedback": "Correct. For a Put: Intrinsic Value = max(Strike − Spot, 0) = max(24,600 − 24,580, 0) = ₹20. So Extrinsic Value = ₹85 − ₹20 = ₹65. The ₹20 is 'real' value the option already has; the ₹65 is the part that will decay if Nifty doesn't fall further."
-        },
-        {
-          "type": "interaction",
-          "kind": "truefalse",
-          "question": "As an option buyer, your real risk on every position is the Extrinsic Value, since that's the portion that decays to zero by expiry.",
-          "options": ["True", "False"],
-          "correctIndex": 0,
-          "feedback": "Correct. The Intrinsic Value can be locked in by exercising or selling. The Extrinsic Value — time value plus volatility premium — is what melts away as expiry approaches. This is the buyer's real, structural risk."
+          "correctIndex": 2,
+          "feedback": "Right. Intrinsic Value can be locked in by exercising or selling. Extrinsic Value — time + volatility premium — melts away as expiry approaches no matter what. That's why option BUYING is structurally harder than option selling: you're always fighting decay."
         }
       ]
     }

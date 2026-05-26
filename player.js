@@ -15,6 +15,12 @@ let COURSE = null;
 let video = null;          // The <video> element
 let currentVideoEnd = null;
 let ccOn = true;
+// Tracks which inline popups have already fired in the current segment,
+// keyed by "lessonId:segmentIdx:popupIndex". Cleared on segment change /
+// lesson switch / restart so popups can re-fire after a replay.
+let firedPopups = new Set();
+// The popup currently being shown (so Continue resumes from the right spot)
+let activePopup = null;
 const state = {
   currentLessonId: 1,
   currentSegmentIdx: 0,
@@ -120,15 +126,30 @@ function bindVideoEvents() {
   video.addEventListener('play',  () => { state.playing = true;  setPlayButtonIcon(); });
   video.addEventListener('pause', () => { state.playing = false; setPlayButtonIcon(); });
 
-  // The playhead progress tick + auto-stop at segment end
+  // The playhead progress tick + auto-stop at segment end / popup
   video.addEventListener('timeupdate', () => {
     updateTimelineUI();
-    // Only auto-advance to the next segment when the video is actually
-    // playing past the segment's end — not when the user scrubbed there.
+    if (video.paused || video.seeking) return;
+
+    // Check for inline popups in the current video segment
+    const seg = currentSegment();
+    if (seg && seg.type === 'video' && Array.isArray(seg.popups)) {
+      for (let i = 0; i < seg.popups.length; i++) {
+        const p = seg.popups[i];
+        const key = `${state.currentLessonId}:${state.currentSegmentIdx}:${i}`;
+        if (firedPopups.has(key)) continue;
+        // Trigger when crossing the popupAt time (within a small tolerance)
+        if (video.currentTime >= p.popupAt && video.currentTime < p.popupAt + 1.5) {
+          firedPopups.add(key);
+          showPopupInteraction(p, seg);
+          return; // don't also fire segment-end on the same tick
+        }
+      }
+    }
+
+    // Auto-advance at segment end (only when actually playing through it)
     if (
       currentVideoEnd !== null &&
-      !video.paused &&
-      !video.seeking &&
       video.currentTime >= currentVideoEnd - 0.05
     ) {
       handleSegmentEnd();
@@ -206,6 +227,27 @@ function seekVideoTo(targetSec) {
     if (isNaN(video.duration)) return;
     const clamped = Math.max(0, Math.min(video.duration, targetSec));
     if (Math.abs(video.currentTime - clamped) < 0.05) return;
+
+    // If scrubbing BACKWARD past popups in the current segment, clear their
+    // "fired" flags so they trigger again on rewatch. Forward scrubs leave
+    // earlier popups marked as fired (you skipped past them).
+    const seg = currentSegment();
+    if (seg && seg.type === 'video' && Array.isArray(seg.popups) && clamped < video.currentTime) {
+      seg.popups.forEach((p, i) => {
+        if (p.popupAt >= clamped) {
+          firedPopups.delete(`${state.currentLessonId}:${state.currentSegmentIdx}:${i}`);
+        }
+      });
+    }
+    // Forward scrubs: mark any popups we just jumped OVER as already fired,
+    // so they don't ambush the user mid-watch after a skip.
+    if (seg && seg.type === 'video' && Array.isArray(seg.popups) && clamped > video.currentTime) {
+      seg.popups.forEach((p, i) => {
+        if (p.popupAt > video.currentTime && p.popupAt <= clamped) {
+          firedPopups.add(`${state.currentLessonId}:${state.currentSegmentIdx}:${i}`);
+        }
+      });
+    }
 
     // Set up a watchdog: if no 'seeked' event arrives within 3 s, the server
     // most likely doesn't support Range requests and the browser is stuck.
@@ -343,23 +385,41 @@ function showInteraction(seg) {
   state.playing = false;
   setPlayButtonIcon();
   captionBar.classList.remove('show');
+  activePopup = null;  // this is a between-segment interaction, not a popup
+  populateInteractionOverlay(seg);
+  interactionOverlay.classList.add('show');
+}
 
-  $('iLabel').textContent = seg.kind === 'truefalse' ? '◆ True or False' : '◆ Quick Check';
-  $('iQuestion').textContent = seg.question;
+/* Mid-video popup interaction — pauses the video, shows the quiz, and on
+   Continue resumes the SAME segment from where it paused (instead of
+   advancing to the next segment). */
+function showPopupInteraction(popup, parentSeg) {
+  if (video && !video.paused) video.pause();
+  state.playing = false;
+  setPlayButtonIcon();
+  captionBar.classList.remove('show');
+  activePopup = { popup, parentSeg };
+  populateInteractionOverlay(popup);
+  interactionOverlay.classList.add('show');
+}
+
+/* Shared overlay-populating logic for both between-segment and popup quizzes. */
+function populateInteractionOverlay(quiz) {
+  $('iLabel').textContent = quiz.kind === 'truefalse' ? '◆ True or False' : '◆ Quick Check';
+  $('iQuestion').textContent = quiz.question;
 
   const opts = $('iOptions');
   opts.innerHTML = '';
-  seg.options.forEach((text, i) => {
+  quiz.options.forEach((text, i) => {
     const btn = document.createElement('button');
     btn.className = 'iopt';
     btn.innerHTML = `<span class="ltr">${String.fromCharCode(65 + i)}</span>${text}`;
-    btn.onclick = () => handleAnswer(seg, i, btn);
+    btn.onclick = () => handleAnswer(quiz, i, btn);
     opts.appendChild(btn);
   });
   $('iFeedback').className = 'ifb';
   $('iFeedback').textContent = '';
   $('iContinue').classList.remove('show');
-  interactionOverlay.classList.add('show');
 }
 
 function handleAnswer(seg, chosenIdx, btn) {
@@ -468,6 +528,8 @@ function attachControls() {
     state.currentSegmentIdx = 0;
     state.playing = false;
     setPlayButtonIcon();
+    firedPopups.clear();
+    activePopup = null;
     completeOverlay.classList.remove('show');
     interactionOverlay.classList.remove('show');
     const first = currentSegment();
@@ -517,9 +579,21 @@ function attachControls() {
 
   /* CONTINUE after interaction */
   $('iContinue').onclick = () => {
+    interactionOverlay.classList.remove('show');
+
+    // Mid-video popup → resume the same segment from where we paused
+    if (activePopup) {
+      const popup = activePopup.popup;
+      activePopup = null;
+      // Nudge slightly past popupAt so we don't re-trigger immediately
+      seekVideoTo(popup.popupAt + 0.1);
+      setTimeout(() => video?.play().catch(()=>{}), 120);
+      return;
+    }
+
+    // Between-segment interaction → advance to next segment
     state.currentSegmentIdx++;
     const next = currentSegment();
-    interactionOverlay.classList.remove('show');
     if (!next) { showCompleteOverlay(); return; }
     if (next.type === 'interaction') {
       showInteraction(next);
@@ -631,7 +705,7 @@ function updateTimelineUI() {
   buf = Math.max(cur, Math.min(total, buf));
   progressBuffered.style.width = (total > 0 ? (buf / total) * 100 : 0) + '%';
 
-  // Markers for interaction stops
+  // Markers for interaction stops + mid-video popups
   const markers = $('progressMarkers');
   if (markers.dataset.lessonId !== String(state.currentLessonId)) {
     markers.innerHTML = '';
@@ -642,8 +716,20 @@ function updateTimelineUI() {
         const m = document.createElement('div');
         m.className = 'progress-marker interaction';
         m.style.left = (acc / total) * 100 + '%';
-        m.title = 'Interaction checkpoint';
+        m.title = 'End-of-section quiz: ' + (seg.question || '').slice(0, 80);
         markers.appendChild(m);
+      }
+      if (seg.type === 'video' && Array.isArray(seg.popups) && total > 0) {
+        // Each popup is positioned within the segment, relative to videoStart
+        seg.popups.forEach(p => {
+          const offsetSec = p.popupAt - seg.videoStart;
+          if (offsetSec < 0 || offsetSec > segDuration(seg)) return;
+          const m = document.createElement('div');
+          m.className = 'progress-marker popup';
+          m.style.left = ((acc + offsetSec) / total) * 100 + '%';
+          m.title = 'Mid-video quiz: ' + (p.question || '').slice(0, 80);
+          markers.appendChild(m);
+        });
       }
       acc += segDuration(seg);
     });
@@ -688,6 +774,8 @@ function switchLesson(id) {
   state.currentSegmentIdx = 0;
   state.playing = false;
   setPlayButtonIcon();
+  firedPopups.clear();
+  activePopup = null;
   completeOverlay.classList.remove('show');
   interactionOverlay.classList.remove('show');
 
@@ -723,6 +811,8 @@ function restartLesson() {
   state.currentSegmentIdx = 0;
   state.playing = false;
   setPlayButtonIcon();
+  firedPopups.clear();
+  activePopup = null;
   completeOverlay.classList.remove('show');
   const first = currentSegment();
   if (first && first.type === 'video') presentVideoSegment(first);
